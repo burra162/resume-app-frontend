@@ -39,7 +39,7 @@ function logout() {
         {{ title }}
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn class="mx-2" :to="{ name: 'resumes' }"> storys </v-btn>
+      <v-btn class="mx-2" :to="{ name: 'resumes' }"> Resumes </v-btn>
       <v-btn v-if="user === null" class="mx-2" :to="{ name: 'login' }">
         Login
       </v-btn>
