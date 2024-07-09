@@ -19,4 +19,7 @@ export default {
       },
     });
   },
+  logoutUser() {
+    return apiClient.post("logout");
+  },
 };
