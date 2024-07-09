@@ -2,7 +2,6 @@
 import ocLogo from "/oc_logo.png";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import UserServices from "../services/UserServices";
 
 const router = useRouter();
 
@@ -15,18 +14,6 @@ onMounted(() => {
   user.value = JSON.parse(localStorage.getItem("user"));
 });
 
-function logout() {
-  UserServices.logoutUser()
-    .then((data) => {
-      console.log(data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  localStorage.removeItem("user");
-  user.value = null;
-  router.push({ name: "login" });
-}
 </script>
 
 <template>
