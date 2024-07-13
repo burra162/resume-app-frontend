@@ -31,11 +31,26 @@ function logout() {
   user.value = null;
   router.push({ name: "login" });
 }
+
+
+const drawer = ref(false);
+
+function showProfile() {
+  router.push({ name: "profile" });
+}
+
+function showHome() {
+  router.push({ name: "home" });
+}
+
 </script>
 
 <template>
   <div>
     <v-app-bar color="primary" app dark>
+
+      <v-app-bar-nav-icon v-if="user !== null" variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+
       <router-link :to="{ name: 'home' }">
         <v-img class="mx-2" :src="logoURL" height="50" width="50" contain></v-img>
       </router-link>
@@ -74,5 +89,25 @@ function logout() {
         </v-card>
       </v-menu>
     </v-app-bar>
+
+
+    <v-navigation-drawer v-if="user !== null" v-model="drawer"
+      :location="$vuetify.display.mobile ? 'bottom' : undefined" temporary>
+      <v-list-item nav class="mt-10">
+        <v-btn block variant="tonal" @click="showHome()">
+          Dashboard
+        </v-btn>
+      </v-list-item>
+      <v-list-item nav>
+        <v-btn block variant="tonal" @click="showProfile()">
+          Profile
+        </v-btn>
+      </v-list-item>
+      <v-list-item nav>
+        <v-btn block variant="tonal" @click="logout()">
+          Logout
+        </v-btn>
+      </v-list-item>
+    </v-navigation-drawer>
   </div>
 </template>
