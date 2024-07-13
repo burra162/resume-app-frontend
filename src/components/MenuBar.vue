@@ -10,9 +10,13 @@ const user = ref(null);
 const title = ref("Resume App");
 const logoURL = ref("");
 
+const isAdmin = ref(false);
 onMounted(() => {
   logoURL.value = ocLogo;
   user.value = JSON.parse(localStorage.getItem("user"));
+  if (user.value !== null) {
+    isAdmin.value = user.value.type === "admin";
+  }
 });
 
 function logout() {
@@ -32,17 +36,15 @@ function logout() {
 <template>
   <div>
     <v-app-bar color="primary" app dark>
-      <router-link :to="{ name: 'resumes' }">
+      <router-link :to="{ name: 'home' }">
         <v-img class="mx-2" :src="logoURL" height="50" width="50" contain></v-img>
       </router-link>
       <v-toolbar-title class="title">
         {{ title }}
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn class="mx-2" :to="{ name: 'resumes' }"> Resumes </v-btn>
-      <v-btn v-if="user === null" class="mx-2" :to="{ name: 'login' }">
-        Login
-      </v-btn>
+      <v-btn v-if="isAdmin" class="mx-2" :to="{ name: 'manage-users' }"> Manage Users </v-btn>
+
       <v-menu v-if="user !== null" min-width="200px" rounded>
         <template v-slot:activator="{ props }">
           <v-btn icon v-bind="props">

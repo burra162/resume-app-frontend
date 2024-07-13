@@ -23,7 +23,7 @@ onMounted(async () => {
 });
 
 function navigateToresumes() {
-  router.push({ name: "resumes" });
+  router.push({ name: "home" });
 }
 
 async function createAccount() {
@@ -32,7 +32,7 @@ async function createAccount() {
       snackbar.value.value = true;
       snackbar.value.color = "green";
       snackbar.value.text = "Account created successfully!";
-      router.push({ name: "login" });
+      closeCreateAccount();
     })
     .catch((error) => {
       console.log(error);
@@ -49,7 +49,18 @@ async function login() {
       snackbar.value.value = true;
       snackbar.value.color = "green";
       snackbar.value.text = "Login successful!";
-      router.push({ name: "resumes" });
+
+      user.value = {
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+      };
+
+      const delay = 1000;
+      setTimeout(() => {
+        navigateToresumes();
+      }, delay);
     })
     .catch((error) => {
       console.log(error);
@@ -74,8 +85,8 @@ function closeSnackBar() {
 
 <template>
   <v-container>
-    <div id="body">
-      <v-card class="rounded-lg elevation-5">
+    <div id="body" align="center">
+      <v-card class="rounded-lg elevation-5"  width="800">
         <v-card-title class="headline mb-2">Login </v-card-title>
         <v-card-text>
           <v-text-field
@@ -87,6 +98,7 @@ function closeSnackBar() {
           <v-text-field
             v-model="user.password"
             label="Password"
+            type="password"
             required
           ></v-text-field>
         </v-card-text>
@@ -98,19 +110,6 @@ function closeSnackBar() {
 
           <v-btn variant="flat" color="primary" @click="login()">Login</v-btn>
         </v-card-actions>
-      </v-card>
-
-      <v-card class="rounded-lg elevation-5 my-8">
-        <v-card-title class="text-center headline">
-          <v-btn
-            class="ml-2"
-            variant="flat"
-            color="secondary"
-            @click="navigateToresumes()"
-          >
-            View Published resumes
-          </v-btn>
-        </v-card-title>
       </v-card>
 
       <v-dialog persistent v-model="isCreateAccount" width="800">
@@ -137,6 +136,7 @@ function closeSnackBar() {
 
             <v-text-field
               v-model="user.password"
+              type="password"
               label="Password"
               required
             ></v-text-field>
