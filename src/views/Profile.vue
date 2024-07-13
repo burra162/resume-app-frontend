@@ -13,17 +13,60 @@ const userUnderEdit = ref(null);
 
 onMounted(async () => {
     userUnderEdit.value = JSON.parse(localStorage.getItem("user"));
-    console.log(userUnderEdit.value);
 });
 
 const showEditDialog = ref(false);
+const showChangePasswordDialog = ref(false);
 
+const oldPassword = ref("");
+const newPassword = ref("");
+const confirmPassword = ref("");
 
 function editUser(user) {
     userUnderEdit.value = user;
     showEditDialog.value = true;
 }
 
+function showChangePassword() {
+    showChangePasswordDialog.value = true;
+}
+
+
+function changePassword() {
+    if (newPassword.value !== confirmPassword.value) {
+        snackbar.value.color = "error";
+        snackbar.value.text = "Passwords do not match";
+        snackbar.value.value = true;
+        return;
+    }
+    if(oldPassword.value === newPassword.value) {
+        snackbar.value.color = "error";
+        snackbar.value.text = "New password cannot be the same as the old password";
+        snackbar.value.value = true;
+        return;
+    }
+
+    if(oldPassword.value.length == 0 || newPassword.value.length == 0 || confirmPassword.value.length == 0) {
+        snackbar.value.color = "error";
+        snackbar.value.text = "All fields are required";
+        snackbar.value.value = true;
+        return;
+    }
+
+    UserServices.updatePassword(userUnderEdit.value.id, oldPassword.value, newPassword.value)
+        .then(() => {
+            snackbar.value.color = "success";
+            snackbar.value.text = "Password changed successfully";
+            snackbar.value.value = true;
+            showChangePasswordDialog.value = false;
+        })
+        .catch((error) => {
+            snackbar.value.color = "error";
+            snackbar.value.text = error.response.data.message ;
+            snackbar.value.value = true;
+            console.log(error);
+        });
+}
 
 function updateUser() {
     UserServices.updateUser(userUnderEdit.value)
@@ -69,7 +112,7 @@ function closeSnackBar() {
                     </v-row>
                 </v-card-text>
                 <v-card-actions>
-                    <v-btn color="primary">Change password</v-btn>
+                    <v-btn color="primary" @click="showChangePassword">Change password</v-btn>
                     <v-spacer></v-spacer>
                     <v-btn variant="flat" color="primary" @click="editUser(userUnderEdit)">Edit</v-btn>
                 </v-card-actions>
@@ -91,6 +134,26 @@ function closeSnackBar() {
                     <v-card-actions>
                         <v-btn color="primary" @click="showEditDialog = false">Cancel</v-btn>
                         <v-btn variant="flat" color="primary" @click="updateUser">Save</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+
+            <v-dialog v-model="showChangePasswordDialog" max-width="500px">
+                <v-card>
+                    <v-card-title>
+                        <h2>Change Password</h2>
+                    </v-card-title>
+
+                    <v-card-text>
+                        <v-form>
+                            <v-text-field v-model="oldPassword" label="Old Password" type="password"></v-text-field>
+                            <v-text-field v-model="newPassword" label="New Password" type="password"></v-text-field>
+                            <v-text-field v-model="confirmPassword" label="Confirm Password" type="password"></v-text-field>
+                        </v-form>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn color="primary" @click="showChangePasswordDialog = false">Cancel</v-btn>
+                        <v-btn variant="flat" color="primary" @click="changePassword">Save</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>

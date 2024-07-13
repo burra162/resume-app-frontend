@@ -30,5 +30,13 @@ export default {
 
   updateUser(user) {
     return apiClient.put("users/" + user.id, user);
-  }
+  },
+  updatePassword(id, oldPassword, newPassword) {
+    return apiClient.put("users/" + id + "/password",
+      {
+        oldPassword: oldPassword,
+        password: newPassword,
+      }
+    );
+  },
 };
