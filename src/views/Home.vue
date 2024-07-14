@@ -29,10 +29,14 @@ onMounted(async () => {
     summary.value.userId = user.value.id;
     education.value.userId = user.value.id;
     experience.value.userId = user.value.id;
+    skill.value.userId = user.value.id;
+
+
     getUserDetails();
     getSummary();
     getEducations();
     getExperiences();
+    getSkills();
 });
 
 async function getUserDetails() {
@@ -208,6 +212,92 @@ async function deleteExperience(exp) {
             snackbar.value.value = true;
             snackbar.value.color = "error";
             snackbar.value.text = "Error deleting experience!";
+        });
+}
+
+const skills = ref([]);
+
+const skill = ref({
+    skill: "",
+    userId: "",
+});
+
+const isSkillSave = ref(true);
+
+const showSkillDialog = ref(false);
+
+function closeSkillDialog() {
+    showSkillDialog.value = false;
+}
+
+function editSkill(s) {
+    skill.value = s;
+    showSkillDialog.value = true;
+}
+
+async function getSkills() {
+    ResumeServices.getSkills(skill.value.userId)
+        .then((data) => {
+            skills.value = data.data;
+            if (skills.value.length === 0) {
+                isSkillSave.value = true;
+            } else {
+                isSkillSave.value = false;
+            }
+        })
+        .catch((error) => {
+        });
+}
+
+
+async function saveSkill() {
+    await ResumeServices.saveSkill(skill.value)
+        .then(() => {
+            snackbar.value.value = true;
+            snackbar.value.color = "green";
+            snackbar.value.text = "Skill saved successfully!";
+            getSkills();
+            closeSkillDialog();
+        })
+        .catch((error) => {
+            snackbar.value.value = true;
+            snackbar.value.color = "error";
+            snackbar.value.text = "Error saving skill!";
+        });
+}
+
+async function updateSkill() {
+    await ResumeServices.updateSkill(skill.value.id, skill.value)
+        .then(() => {
+            snackbar.value.value = true;
+            snackbar.value.color = "green";
+            snackbar.value.text = "Skill updated successfully!";
+            closeSkillDialog();
+            getSkills();
+        })
+        .catch((error) => {
+            snackbar.value.value = true;
+            snackbar.value.color = "error";
+            snackbar.value.text = "Error updating skill!";
+        });
+}
+
+async function deleteSkill(s) {
+    if (!confirm("Are you sure you want to delete this skill?")) {
+        return;
+    }
+    await ResumeServices.deleteSkill(s.id)
+        .then(() => {
+            snackbar.value.value = true;
+            snackbar.value.color = "green";
+            snackbar.value.text = "Skill deleted successfully!";
+            getSkills();
+            closeSkillDialog();
+        })
+        .catch((error) => {
+            snackbar.value.value = true;
+            snackbar.value.color = "error";
+            snackbar.value.text = "Error deleting skill!";
         });
 }
 
@@ -466,9 +556,10 @@ async function updateSummary() {
                                 <v-card-actions>
                                     <h3>Education</h3>
                                     <v-spacer></v-spacer>
-                                    <v-btn variant="flat" color="primary" @click="showEducationDialog = true">Add Education</v-btn>
-                                    </v-card-actions>
-                                
+                                    <v-btn variant="flat" color="primary" @click="showEducationDialog = true">Add
+                                        Education</v-btn>
+                                </v-card-actions>
+
                             </v-card-title>
                             <v-card-text>
                                 <v-table>
@@ -483,7 +574,8 @@ async function updateSummary() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr @click="editEducation(education)" v-for="education in educations" :key="education.id">
+                                            <tr @click="editEducation(education)" v-for="education in educations"
+                                                :key="education.id">
                                                 <td>{{ education.school }}</td>
                                                 <td>{{ education.degree }}</td>
                                                 <td>{{ formatEducationDate(education.startDate) }}</td>
@@ -494,16 +586,17 @@ async function updateSummary() {
                                     </template>
                                 </v-table>
                             </v-card-text>
-                            </v-card>
+                        </v-card>
 
                         <v-card v-else-if="selectedResumeTab === 3">
                             <v-card-title>
                                 <v-card-actions>
                                     <h3>Professional Experience</h3>
                                     <v-spacer></v-spacer>
-                                    <v-btn variant="flat" color="primary" @click="showExperienceDialog = true">Add Experience</v-btn>
-                                    </v-card-actions>
-                                
+                                    <v-btn variant="flat" color="primary" @click="showExperienceDialog = true">Add
+                                        Experience</v-btn>
+                                </v-card-actions>
+
                             </v-card-title>
                             <v-card-text>
                                 <v-table>
@@ -517,7 +610,8 @@ async function updateSummary() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr @click="showExpeience(experience)" v-for="experience in experiences" :key="experience.id">
+                                            <tr @click="showExpeience(experience)" v-for="experience in experiences"
+                                                :key="experience.id">
                                                 <td>{{ experience.employer }}</td>
                                                 <td>{{ experience.jobTitle }}</td>
                                                 <td>{{ formatExperienceDate(experience.startDate) }}</td>
@@ -527,7 +621,30 @@ async function updateSummary() {
                                     </template>
                                 </v-table>
                             </v-card-text>
-                            </v-card>
+                        </v-card>
+
+                        <v-card v-else-if="selectedResumeTab === 4">
+                            <v-card-title>
+                                <v-card-actions>
+                                    <h3>Skills</h3>
+                                    <v-spacer></v-spacer>
+                                    <v-btn variant="flat" color="primary" @click="showSkillDialog = true">Add
+                                        Skill</v-btn>
+                                </v-card-actions>
+
+                            </v-card-title>
+                            <v-card-text>
+                                <v-table>
+                                    <template v-slot:default>
+                                        <tbody>
+                                            <tr @click="editSkill(skill)" v-for="skill in skills" :key="skill.id">
+                                                <td>{{ skill.skill }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </template>
+                                </v-table>
+                            </v-card-text>
+                        </v-card>
 
                     </v-col>
 
@@ -554,7 +671,7 @@ async function updateSummary() {
                             <v-text-field v-model="education.school" label="School"></v-text-field>
                             <v-text-field v-model="education.address" label="Address"></v-text-field>
                             <v-text-field v-model="education.degree" label="Degree"></v-text-field>
-                            <v-text-field v-model="education.startDate"  type="date" label="Start Date"></v-text-field>
+                            <v-text-field v-model="education.startDate" type="date" label="Start Date"></v-text-field>
                             <v-text-field v-model="education.endDate" type="date" label="End Date"></v-text-field>
                             <v-text-field v-model="education.gpa" type="number" label="GPA"></v-text-field>
                             <v-text-field v-model="education.coursework" label="Coursework"></v-text-field>
@@ -568,7 +685,7 @@ async function updateSummary() {
                         <v-btn v-else variant="flat" color="primary" @click="updateEducation">Update</v-btn>
                     </v-card-actions>
                 </v-card>
-                </v-dialog>
+            </v-dialog>
 
 
             <v-dialog v-model="showExperienceDialog" max-width="500px">
@@ -591,11 +708,34 @@ async function updateSummary() {
                         <v-btn variant="flat" color="error" @click="deleteExperience(experience)">Delete</v-btn>
                         <v-spacer></v-spacer>
                         <v-btn color="primary" @click="closeExperienceDialog">Cancel</v-btn>
-                        <v-btn v-if="isExperienceSave" variant="flat" color="primary" @click="saveExperience">Save</v-btn>
+                        <v-btn v-if="isExperienceSave" variant="flat" color="primary"
+                            @click="saveExperience">Save</v-btn>
                         <v-btn v-else variant="flat" color="primary" @click="updateExperience">Update</v-btn>
                     </v-card-actions>
                 </v-card>
-                </v-dialog>
+            </v-dialog>
+
+            <v-dialog v-model="showSkillDialog" max-width="500px">
+                <v-card>
+                    <v-card-title>
+
+                        <h2 v-if="isSkillSave">Add Skill</h2>
+                        <h2 v-else>Skill</h2>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-form>
+                            <v-text-field v-model="skill.skill" label="Skill"></v-text-field>
+                        </v-form>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn variant="flat" color="error" @click="deleteSkill(skill)">Delete</v-btn>
+                        <v-spacer></v-spacer>
+                        <v-btn color="primary" @click="closeSkillDialog">Cancel</v-btn>
+                        <v-btn v-if="isSkillSave" variant="flat" color="primary" @click="saveSkill">Save</v-btn>
+                        <v-btn v-else variant="flat" color="primary" @click="updateSkill">Update</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
 
             <v-snackbar v-model="snackbar.value" rounded="pill">
                 {{ snackbar.text }}
@@ -608,3 +748,18 @@ async function updateSummary() {
         </div>
     </v-container>
 </template>
+
+<style scoped>
+v-table {
+    cursor: pointer;
+}
+
+thead {
+    background-color: #80162B;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+</style>
