@@ -27,8 +27,10 @@ onMounted(async () => {
     user.value = JSON.parse(localStorage.getItem("user"));
     userDetails.value.userId = user.value.id;
     summary.value.userId = user.value.id;
+    education.value.userId = user.value.id;
     getUserDetails();
     getSummary();
+    getEducations();
 });
 
 async function getUserDetails() {
@@ -110,6 +112,100 @@ function changeResumeTab(index) {
 
 function closeSnackBar() {
     snackbar.value.value = false;
+}
+
+const educations = ref([]);
+
+const education = ref({
+    school: "",
+    address: "",
+    degree: "",
+    startDate: "",
+    endDate: "",
+    gpa: "",
+    coursework: "",
+    userId: "",
+});
+
+const isEducationSave = ref(true);
+
+const showEducationDialog = ref(false);
+
+function closeEducationDialog() {
+    showEducationDialog.value = false;
+}
+
+function editEducation(edu) {
+    education.value = edu;
+    showEducationDialog.value = true;
+}
+
+function formatEducationDate(date) {
+    return new Date(date).toLocaleDateString();
+}
+
+async function getEducations() {
+    ResumeServices.getEducation(education.value.userId)
+        .then((data) => {
+            educations.value = data.data;
+            if (educations.value.length === 0) {
+                isEducationSave.value = true;
+            } else {
+                isEducationSave.value = false;
+            }
+        })
+        .catch((error) => {
+        });
+}
+
+async function saveEducation() {
+    await ResumeServices.saveEducation(education.value)
+        .then(() => {
+            snackbar.value.value = true;
+            snackbar.value.color = "green";
+            snackbar.value.text = "Education saved successfully!";
+            getEducations();
+            closeEducationDialog();
+        })
+        .catch((error) => {
+            snackbar.value.value = true;
+            snackbar.value.color = "error";
+            snackbar.value.text = "Error saving education!";
+        });
+}
+
+async function updateEducation() {
+    await ResumeServices.updateEducation(education.value.id, education.value)
+        .then(() => {
+            snackbar.value.value = true;
+            snackbar.value.color = "green";
+            snackbar.value.text = "Education updated successfully!";
+            closeEducationDialog();
+            getEducations();
+        })
+        .catch((error) => {
+            snackbar.value.value = true;
+            snackbar.value.color = "error";
+            snackbar.value.text = "Error updating education!";
+        });
+}
+
+async function deleteEducation(edu) {
+    if (!confirm("Are you sure you want to delete this education?")) {
+        return;
+    }
+    await ResumeServices.deleteEducation(edu.id)
+        .then(() => {
+            snackbar.value.value = true;
+            snackbar.value.color = "green";
+            snackbar.value.text = "Education deleted successfully!";
+            getEducations();
+        })
+        .catch((error) => {
+            snackbar.value.value = true;
+            snackbar.value.color = "error";
+            snackbar.value.text = "Error deleting education!";
+        });
 }
 
 const summary = ref({
@@ -265,6 +361,53 @@ async function updateSummary() {
                             </v-card-actions>
                         </v-card>
 
+                        <v-card v-else-if="selectedResumeTab === 2">
+                            <v-card-title>
+                                <v-card-actions>
+                                    <h3>Education</h3>
+                                    <v-spacer></v-spacer>
+                                    <v-btn variant="flat" color="primary" @click="showEducationDialog = true">Add Education</v-btn>
+                                    </v-card-actions>
+                                
+                            </v-card-title>
+                            <v-card-text>
+                                <v-table>
+                                    <template v-slot:default>
+                                        <thead>
+                                            <tr>
+                                                <th class="text-left">School</th>
+                                                <th class="text-left">Address</th>
+                                                <th class="text-left">Degree</th>
+                                                <th class="text-left">Start Date</th>
+                                                <th class="text-left">End Date</th>
+                                                <th class="text-left">GPA</th>
+                                                <th class="text-left">Coursework</th>
+                                                <th class="text-left">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="education in educations" :key="education.id">
+                                                <td>{{ education.school }}</td>
+                                                <td>{{ education.address }}</td>
+                                                <td>{{ education.degree }}</td>
+                                                <td>{{ formatEducationDate(education.startDate) }}</td>
+                                                <td>{{ formatEducationDate(education.endDate) }}</td>
+                                                <td>{{ education.gpa }}</td>
+                                                <td>{{ education.coursework }}</td>
+                                                <td>
+                                                    <v-btn class="mx-2" color="primary" @click="editEducation(education)">
+                                                        Edit
+                                                    </v-btn>
+                                                    <v-btn color="error" @click="deleteEducation(education)">
+                                                        Delete
+                                                    </v-btn>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </template>
+                                </v-table>
+                            </v-card-text>
+                            </v-card>
 
                     </v-col>
                     <v-col v-else-if="selectedTab === 1">
@@ -275,6 +418,33 @@ async function updateSummary() {
                     </v-col>
                 </v-row>
             </v-container>
+
+
+            <v-dialog v-model="showEducationDialog" max-width="500px">
+                <v-card>
+                    <v-card-title>
+
+                        <h2 v-if="isEducationSave">Add Education</h2>
+                        <h2 v-else>Update Education</h2>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-form>
+                            <v-text-field v-model="education.school" label="School"></v-text-field>
+                            <v-text-field v-model="education.address" label="Address"></v-text-field>
+                            <v-text-field v-model="education.degree" label="Degree"></v-text-field>
+                            <v-text-field v-model="education.startDate"  type="date" label="Start Date"></v-text-field>
+                            <v-text-field v-model="education.endDate" type="date" label="End Date"></v-text-field>
+                            <v-text-field v-model="education.gpa" type="number" label="GPA"></v-text-field>
+                            <v-text-field v-model="education.coursework" label="Coursework"></v-text-field>
+                        </v-form>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn color="primary" @click="closeEducationDialog">Cancel</v-btn>
+                        <v-btn v-if="isEducationSave" variant="flat" color="primary" @click="saveEducation">Save</v-btn>
+                        <v-btn v-else variant="flat" color="primary" @click="updateEducation">Update</v-btn>
+                    </v-card-actions>
+                </v-card>
+                </v-dialog>
 
             <v-snackbar v-model="snackbar.value" rounded="pill">
                 {{ snackbar.text }}

@@ -44,4 +44,24 @@ export default {
     },
     
 
+    // save education
+    saveEducation(education) {
+        return apiClient.post("user-details/education", education);
+    },
+
+    // get education
+    getEducation(userId) {
+        return apiClient.get(`user-details/education/${userId}`);
+    },
+
+    // update education
+    updateEducation(id, education) {
+        return apiClient.put(`user-details/education/${id}`, education);
+    },
+
+    // delete education
+    deleteEducation(id) {
+        return apiClient.delete(`user-details/education/${id}`);
+    },
+
 }
