@@ -86,4 +86,25 @@ export default {
         return apiClient.delete(`user-details/experience/${id}`);
     },
 
+    // save skill
+    saveSkill(skill) {
+        return apiClient.post("user-details/skill", skill);
+    },
+
+    // get skill
+    getSkills(userId) {
+        return apiClient.get(`user-details/skill/${userId}`);
+    },
+
+    // update skill
+    updateSkill(id, skill) {
+        return apiClient.put(`user-details/skill/${id}`, skill);
+    },
+
+    // delete skill
+    deleteSkill(id) {
+        return apiClient.delete(`user-details/skill/${id}`);
+    },
+
+
 }
