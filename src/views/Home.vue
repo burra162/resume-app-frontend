@@ -19,12 +19,16 @@ const userDetails = ref({
     userId: "",
 });
 
+const user = ref(null);
+
 const isSave = ref(false);
 
 onMounted(async () => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    userDetails.value.userId = user.id;
+    user.value = JSON.parse(localStorage.getItem("user"));
+    userDetails.value.userId = user.value.id;
+    summary.value.userId = user.value.id;
     getUserDetails();
+    getSummary();
 });
 
 async function getUserDetails() {
@@ -34,9 +38,7 @@ async function getUserDetails() {
             isSave.value = false;
         })
         .catch((error) => {
-            console.log(error);
             isSave.value = true;
-            console.log(isSave.value);
         });
 
 }
@@ -79,7 +81,6 @@ async function saveUserDetails() {
             getUserDetails();
         })
         .catch((error) => {
-            console.log(error);
             snackbar.value.value = true;
             snackbar.value.color = "error";
             snackbar.value.text = error.response.data.message;
@@ -95,7 +96,6 @@ async function updateUserDetails() {
             getUserDetails();
         })
         .catch((error) => {
-            console.log(error);
             snackbar.value.value = true;
             snackbar.value.color = "error";
             snackbar.value.text = error.response.data.message;
@@ -111,6 +111,58 @@ function changeResumeTab(index) {
 function closeSnackBar() {
     snackbar.value.value = false;
 }
+
+const summary = ref({
+    summary: "",
+    userId: "",
+});
+
+const isSummarySave = ref(false);
+
+async function getSummary() {
+    ResumeServices.getSummary(summary.value.userId)
+        .then((data) => {
+            summary.value = data.data;
+            isSummarySave.value = false;
+        })
+        .catch((error) => {
+            isSummarySave.value = true;
+        });
+}
+
+async function saveSummary() {
+    await ResumeServices.saveSummary(summary.value)
+        .then(() => {
+            snackbar.value.value = true;
+            snackbar.value.color = "green";
+            snackbar.value.text = "Summary saved successfully!";
+            getSummary();
+        })
+        .catch((error) => {
+            snackbar.value.value = true;
+            snackbar.value.color = "error";
+            snackbar.value.text = error.response.data.message;
+        });
+}
+
+async function updateSummary() {
+    await ResumeServices.updateSummary(summary.value.id, summary.value)
+        .then(() => {
+            snackbar.value.value = true;
+            snackbar.value.color = "green";
+            snackbar.value.text = "Summary updated successfully!";
+            getSummary();
+        })
+        .catch((error) => {
+            console.log(error);
+            snackbar.value.value = true;
+            snackbar.value.color = "error";
+            snackbar.value.text = error.response.data.message;
+        });
+}
+
+
+
 </script>
 
 <template>
@@ -135,13 +187,12 @@ function closeSnackBar() {
             <v-container>
                 <v-row>
                     <v-col v-if="selectedTab === 0">
-
                         <v-tabs bg-color="primary" fixed-tabs>
                             <v-tab v-for="(tab, index) in resumeTabs" :key="index" @click="changeResumeTab(index)">
                                 {{ tab }}
                             </v-tab>
                         </v-tabs>
-                        <v-card>
+                        <v-card v-if="selectedResumeTab === 0">
                             <v-card-title>
                                 <h3>Personal Details</h3>
                             </v-card-title>
@@ -158,7 +209,8 @@ function closeSnackBar() {
                                             label="Email"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="6">
-                                        <v-text-field v-model="userDetails.number" type="number" label="Phone Number"></v-text-field>
+                                        <v-text-field v-model="userDetails.number" type="number"
+                                            label="Phone Number"></v-text-field>
                                     </v-col>
                                     <v-col cols="12">
                                         <v-text-field v-model="userDetails.address" label="Address"></v-text-field>
@@ -193,6 +245,27 @@ function closeSnackBar() {
                                 <v-btn v-else variant="flat" color="primary" @click="updateUserDetails">Update</v-btn>
                             </v-card-actions>
                         </v-card>
+
+                        <v-card v-else-if="selectedResumeTab === 1">
+                            <v-card-title>
+                                <h3>Professional Summary</h3>
+                            </v-card-title>
+                            <v-card-text>
+                                <v-row>
+                                    <v-col cols="12">
+                                        <v-textarea v-model="summary.summary" label="Summary"></v-textarea>
+                                    </v-col>
+                                </v-row>
+                            </v-card-text>
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn v-if="isSummarySave" variant="flat" color="primary"
+                                    @click="saveSummary">Save</v-btn>
+                                <v-btn v-else variant="flat" color="primary" @click="updateSummary">Update</v-btn>
+                            </v-card-actions>
+                        </v-card>
+
+
                     </v-col>
                     <v-col v-else-if="selectedTab === 1">
 
