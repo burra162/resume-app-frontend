@@ -28,9 +28,11 @@ onMounted(async () => {
     userDetails.value.userId = user.value.id;
     summary.value.userId = user.value.id;
     education.value.userId = user.value.id;
+    experience.value.userId = user.value.id;
     getUserDetails();
     getSummary();
     getEducations();
+    getExperiences();
 });
 
 async function getUserDetails() {
@@ -113,6 +115,103 @@ function changeResumeTab(index) {
 function closeSnackBar() {
     snackbar.value.value = false;
 }
+
+const experiences = ref([]);
+
+const experience = ref({
+    employer: "",
+    jobTitle: "",
+    startDate: "",
+    endDate: "",
+    description: "",
+    address: "",
+    userId: "",
+});
+
+const isExperienceSave = ref(true);
+
+const showExperienceDialog = ref(false);
+
+function closeExperienceDialog() {
+    showExperienceDialog.value = false;
+}
+
+function showExpeience(exp) {
+    experience.value = exp;
+    showExperienceDialog.value = true;
+}
+
+function formatExperienceDate(date) {
+    return new Date(date).toLocaleDateString();
+}
+
+async function getExperiences() {
+    ResumeServices.getExperience(experience.value.userId)
+        .then((data) => {
+            experiences.value = data.data;
+            if (experiences.value.length === 0) {
+                isExperienceSave.value = true;
+            } else {
+                isExperienceSave.value = false;
+            }
+        })
+        .catch((error) => {
+        });
+}
+
+
+async function saveExperience() {
+    await ResumeServices.saveExperience(experience.value)
+        .then(() => {
+            snackbar.value.value = true;
+            snackbar.value.color = "green";
+            snackbar.value.text = "Experience saved successfully!";
+            getExperiences();
+            closeExperienceDialog();
+        })
+        .catch((error) => {
+            snackbar.value.value = true;
+            snackbar.value.color = "error";
+            snackbar.value.text = "Error saving experience!";
+        });
+}
+
+async function updateExperience() {
+    await ResumeServices.updateExperience(experience.value.id, experience.value)
+        .then(() => {
+            snackbar.value.value = true;
+            snackbar.value.color = "green";
+            snackbar.value.text = "Experience updated successfully!";
+            closeExperienceDialog();
+            getExperiences();
+        })
+        .catch((error) => {
+            snackbar.value.value = true;
+            snackbar.value.color = "error";
+            snackbar.value.text = "Error updating experience!";
+        });
+}
+
+async function deleteExperience(exp) {
+    if (!confirm("Are you sure you want to delete this experience?")) {
+        return;
+    }
+    await ResumeServices.deleteExperience(exp.id)
+        .then(() => {
+            snackbar.value.value = true;
+            snackbar.value.color = "green";
+            snackbar.value.text = "Experience deleted successfully!";
+            getExperiences();
+            closeExperienceDialog();
+        })
+        .catch((error) => {
+            snackbar.value.value = true;
+            snackbar.value.color = "error";
+            snackbar.value.text = "Error deleting experience!";
+        });
+}
+
+
 
 const educations = ref([]);
 
@@ -200,6 +299,7 @@ async function deleteEducation(edu) {
             snackbar.value.color = "green";
             snackbar.value.text = "Education deleted successfully!";
             getEducations();
+            closeEducationDialog();
         })
         .catch((error) => {
             snackbar.value.value = true;
@@ -376,32 +476,52 @@ async function updateSummary() {
                                         <thead>
                                             <tr>
                                                 <th class="text-left">School</th>
-                                                <th class="text-left">Address</th>
                                                 <th class="text-left">Degree</th>
                                                 <th class="text-left">Start Date</th>
                                                 <th class="text-left">End Date</th>
                                                 <th class="text-left">GPA</th>
-                                                <th class="text-left">Coursework</th>
-                                                <th class="text-left">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="education in educations" :key="education.id">
+                                            <tr @click="editEducation(education)" v-for="education in educations" :key="education.id">
                                                 <td>{{ education.school }}</td>
-                                                <td>{{ education.address }}</td>
                                                 <td>{{ education.degree }}</td>
                                                 <td>{{ formatEducationDate(education.startDate) }}</td>
                                                 <td>{{ formatEducationDate(education.endDate) }}</td>
                                                 <td>{{ education.gpa }}</td>
-                                                <td>{{ education.coursework }}</td>
-                                                <td>
-                                                    <v-btn class="mx-2" color="primary" @click="editEducation(education)">
-                                                        Edit
-                                                    </v-btn>
-                                                    <v-btn color="error" @click="deleteEducation(education)">
-                                                        Delete
-                                                    </v-btn>
-                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </template>
+                                </v-table>
+                            </v-card-text>
+                            </v-card>
+
+                        <v-card v-else-if="selectedResumeTab === 3">
+                            <v-card-title>
+                                <v-card-actions>
+                                    <h3>Professional Experience</h3>
+                                    <v-spacer></v-spacer>
+                                    <v-btn variant="flat" color="primary" @click="showExperienceDialog = true">Add Experience</v-btn>
+                                    </v-card-actions>
+                                
+                            </v-card-title>
+                            <v-card-text>
+                                <v-table>
+                                    <template v-slot:default>
+                                        <thead>
+                                            <tr>
+                                                <th class="text-left">Employer</th>
+                                                <th class="text-left">Job Title</th>
+                                                <th class="text-left">Start Date</th>
+                                                <th class="text-left">End Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr @click="showExpeience(experience)" v-for="experience in experiences" :key="experience.id">
+                                                <td>{{ experience.employer }}</td>
+                                                <td>{{ experience.jobTitle }}</td>
+                                                <td>{{ formatExperienceDate(experience.startDate) }}</td>
+                                                <td>{{ formatExperienceDate(experience.endDate) }}</td>
                                             </tr>
                                         </tbody>
                                     </template>
@@ -410,6 +530,8 @@ async function updateSummary() {
                             </v-card>
 
                     </v-col>
+
+
                     <v-col v-else-if="selectedTab === 1">
 
                     </v-col>
@@ -439,9 +561,38 @@ async function updateSummary() {
                         </v-form>
                     </v-card-text>
                     <v-card-actions>
+                        <v-btn variant="flat" color="error" @click="deleteEducation(education)">Delete</v-btn>
+                        <v-spacer></v-spacer>
                         <v-btn color="primary" @click="closeEducationDialog">Cancel</v-btn>
                         <v-btn v-if="isEducationSave" variant="flat" color="primary" @click="saveEducation">Save</v-btn>
                         <v-btn v-else variant="flat" color="primary" @click="updateEducation">Update</v-btn>
+                    </v-card-actions>
+                </v-card>
+                </v-dialog>
+
+
+            <v-dialog v-model="showExperienceDialog" max-width="500px">
+                <v-card>
+                    <v-card-title>
+
+                        <h2 v-if="isExperienceSave">Add Experience</h2>
+                        <h2 v-else>Experience</h2>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-form>
+                            <v-text-field v-model="experience.employer" label="Employer"></v-text-field>
+                            <v-text-field v-model="experience.jobTitle" label="Job Title"></v-text-field>
+                            <v-text-field v-model="experience.startDate" type="date" label="Start Date"></v-text-field>
+                            <v-text-field v-model="experience.endDate" type="date" label="End Date"></v-text-field>
+                            <v-text-field v-model="experience.address" label="Address"></v-text-field>
+                        </v-form>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn variant="flat" color="error" @click="deleteExperience(experience)">Delete</v-btn>
+                        <v-spacer></v-spacer>
+                        <v-btn color="primary" @click="closeExperienceDialog">Cancel</v-btn>
+                        <v-btn v-if="isExperienceSave" variant="flat" color="primary" @click="saveExperience">Save</v-btn>
+                        <v-btn v-else variant="flat" color="primary" @click="updateExperience">Update</v-btn>
                     </v-card-actions>
                 </v-card>
                 </v-dialog>

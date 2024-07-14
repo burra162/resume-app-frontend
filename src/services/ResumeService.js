@@ -64,4 +64,26 @@ export default {
         return apiClient.delete(`user-details/education/${id}`);
     },
 
+    // save experience
+    saveExperience(experience) {
+        return apiClient.post("user-details/experience", experience);
+    },
+
+    // get experience
+    getExperience(userId) {
+        return apiClient.get(`user-details/experience/${userId}`);
+    },
+
+    // update experience
+
+    updateExperience(id, experience) {
+        return apiClient.put(`user-details/experience/${id}`, experience);
+    },
+
+    // delete experience
+
+    deleteExperience(id) {
+        return apiClient.delete(`user-details/experience/${id}`);
+    },
+
 }
