@@ -137,10 +137,25 @@ const isExperienceSave = ref(true);
 const showExperienceDialog = ref(false);
 
 function closeExperienceDialog() {
+    experience.value = {
+        employer: "",
+        jobTitle: "",
+        startDate: "",
+        endDate: "",
+        description: "",
+        address: "",
+        userId: user.value.id,
+    };
     showExperienceDialog.value = false;
 }
 
+function openAddExperience() {
+    isExperienceSave.value = true;
+    showExperienceDialog.value = true;
+}
+
 function showExpeience(exp) {
+    isExperienceSave.value = false;
     experience.value = exp;
     showExperienceDialog.value = true;
 }
@@ -153,11 +168,6 @@ async function getExperiences() {
     ResumeServices.getExperience(experience.value.userId)
         .then((data) => {
             experiences.value = data.data;
-            if (experiences.value.length === 0) {
-                isExperienceSave.value = true;
-            } else {
-                isExperienceSave.value = false;
-            }
         })
         .catch((error) => {
         });
@@ -227,10 +237,21 @@ const isSkillSave = ref(true);
 const showSkillDialog = ref(false);
 
 function closeSkillDialog() {
+    skill.value = {
+        skill: "",
+        userId: user.value.id,
+    };
     showSkillDialog.value = false;
 }
 
+
+function openAddSkill() {
+    isSkillSave.value = true;
+    showSkillDialog.value = true;
+}
+
 function editSkill(s) {
+    isSkillSave.value = false;
     skill.value = s;
     showSkillDialog.value = true;
 }
@@ -239,11 +260,6 @@ async function getSkills() {
     ResumeServices.getSkills(skill.value.userId)
         .then((data) => {
             skills.value = data.data;
-            if (skills.value.length === 0) {
-                isSkillSave.value = true;
-            } else {
-                isSkillSave.value = false;
-            }
         })
         .catch((error) => {
         });
@@ -321,10 +337,26 @@ const isEducationSave = ref(true);
 const showEducationDialog = ref(false);
 
 function closeEducationDialog() {
+    education.value = {
+        school: "",
+        address: "",
+        degree: "",
+        startDate: "",
+        endDate: "",
+        gpa: "",
+        coursework: "",
+        userId: user.value.id,
+    };
     showEducationDialog.value = false;
 }
 
+function openSaveEducation() {
+    isEducationSave.value = true;
+    showEducationDialog.value = true;
+}
+
 function editEducation(edu) {
+    isEducationSave.value = false;
     education.value = edu;
     showEducationDialog.value = true;
 }
@@ -337,11 +369,6 @@ async function getEducations() {
     ResumeServices.getEducation(education.value.userId)
         .then((data) => {
             educations.value = data.data;
-            if (educations.value.length === 0) {
-                isEducationSave.value = true;
-            } else {
-                isEducationSave.value = false;
-            }
         })
         .catch((error) => {
         });
@@ -556,7 +583,7 @@ async function updateSummary() {
                                 <v-card-actions>
                                     <h3>Education</h3>
                                     <v-spacer></v-spacer>
-                                    <v-btn variant="flat" color="primary" @click="showEducationDialog = true">Add
+                                    <v-btn variant="flat" color="primary" @click="openSaveEducation()">Add
                                         Education</v-btn>
                                 </v-card-actions>
 
@@ -593,7 +620,7 @@ async function updateSummary() {
                                 <v-card-actions>
                                     <h3>Professional Experience</h3>
                                     <v-spacer></v-spacer>
-                                    <v-btn variant="flat" color="primary" @click="showExperienceDialog = true">Add
+                                    <v-btn variant="flat" color="primary" @click="openAddExperience()">Add
                                         Experience</v-btn>
                                 </v-card-actions>
 
@@ -628,7 +655,7 @@ async function updateSummary() {
                                 <v-card-actions>
                                     <h3>Skills</h3>
                                     <v-spacer></v-spacer>
-                                    <v-btn variant="flat" color="primary" @click="showSkillDialog = true">Add
+                                    <v-btn variant="flat" color="primary" @click="openAddSkill()">Add
                                         Skill</v-btn>
                                 </v-card-actions>
 
@@ -678,7 +705,7 @@ async function updateSummary() {
                         </v-form>
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn variant="flat" color="error" @click="deleteEducation(education)">Delete</v-btn>
+                        <v-btn v-if="!isEducationSave" variant="flat" color="error" @click="deleteEducation(education)">Delete</v-btn>
                         <v-spacer></v-spacer>
                         <v-btn color="primary" @click="closeEducationDialog">Cancel</v-btn>
                         <v-btn v-if="isEducationSave" variant="flat" color="primary" @click="saveEducation">Save</v-btn>
@@ -705,7 +732,7 @@ async function updateSummary() {
                         </v-form>
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn variant="flat" color="error" @click="deleteExperience(experience)">Delete</v-btn>
+                        <v-btn v-if="!isExperienceSave" variant="flat" color="error" @click="deleteExperience(experience)">Delete</v-btn>
                         <v-spacer></v-spacer>
                         <v-btn color="primary" @click="closeExperienceDialog">Cancel</v-btn>
                         <v-btn v-if="isExperienceSave" variant="flat" color="primary"
@@ -728,7 +755,7 @@ async function updateSummary() {
                         </v-form>
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn variant="flat" color="error" @click="deleteSkill(skill)">Delete</v-btn>
+                        <v-btn v-if="!isSkillSave"  variant="flat" color="error" @click="deleteSkill(skill)">Delete</v-btn>
                         <v-spacer></v-spacer>
                         <v-btn color="primary" @click="closeSkillDialog">Cancel</v-btn>
                         <v-btn v-if="isSkillSave" variant="flat" color="primary" @click="saveSkill">Save</v-btn>
