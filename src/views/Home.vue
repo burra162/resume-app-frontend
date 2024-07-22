@@ -2,6 +2,7 @@
 import { onMounted } from "vue";
 import { ref } from "vue";
 import ResumeServices from "../services/ResumeService.js";
+import JobComponent from "./UserJobs.vue"
 
 
 const userDetails = ref({
@@ -680,7 +681,7 @@ async function updateSummary() {
 
                     </v-col>
                     <v-col v-else-if="selectedTab === 2">
-
+                        <JobComponent   />
                     </v-col>
                 </v-row>
             </v-container>
