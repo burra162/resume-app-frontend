@@ -2,7 +2,8 @@
 import { onMounted } from "vue";
 import { ref } from "vue";
 import ResumeServices from "../services/ResumeService.js";
-import JobComponent from "./UserJobs.vue"
+import JobComponent from "./UserJobs.vue";
+import ProjetComponent from "./Projects.vue";
 
 
 const userDetails = ref({
@@ -673,12 +674,15 @@ async function updateSummary() {
                                 </v-table>
                             </v-card-text>
                         </v-card>
-
+                        <v-card v-else-if="selectedResumeTab === 5">
+                          <ProjetComponent ></ProjetComponent>
+                          
+                        </v-card>
                     </v-col>
 
 
                     <v-col v-else-if="selectedTab === 1">
-
+                            <h2>Templates</h2>
                     </v-col>
                     <v-col v-else-if="selectedTab === 2">
                         <JobComponent   />

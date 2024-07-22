@@ -164,7 +164,7 @@ function openAddDialog() {
     <v-row>
       <v-col cols="12">
         <v-container>
-          <v-card-title class="headline mb-2">Job details</v-card-title>
+          <v-card-title class="headline mb-2">Job Applications</v-card-title>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="primary" variant="flat" @click="openAddDialog">Add Job</v-btn>
