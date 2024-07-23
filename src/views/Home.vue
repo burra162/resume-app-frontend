@@ -4,7 +4,8 @@ import { ref } from "vue";
 import ResumeServices from "../services/ResumeService.js";
 import JobComponent from "./UserJobs.vue";
 import ProjetComponent from "./Projects.vue";
-import LeadershipsComponent from "./Leaderships.vue";
+import LeadershipsComponent from "./Leaderships.vue"; 
+import AwardsComponent from "./Awards.vue";
 
 
 const userDetails = ref({
@@ -80,6 +81,7 @@ const resumeTabs = ref([
     "Skills",
     "Projects",
     "Leaderships",
+    "Awards",
 ]);
 
 
@@ -681,6 +683,10 @@ async function updateSummary() {
                         </v-card>
                         <v-card v-else-if="selectedResumeTab === 6">
                           <LeadershipsComponent ></LeadershipsComponent>
+                          
+                        </v-card>
+                        <v-card v-else-if="selectedResumeTab === 7">
+                          <AwardsComponent ></AwardsComponent>
                           
                         </v-card>
                         
