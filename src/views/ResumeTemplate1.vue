@@ -9,6 +9,7 @@ import Education from '../components/Education.vue';
 import Experience from '../components/Experience.vue';
 import ProfessionalSummary from "../components/ProfessionalSummary.vue";   
 import Skills from "../components/Skills.vue";  
+import TemplateSwitch from "../components/TemplateSwitch.vue";  
 
 const router = useRouter();
 const user = ref({});
@@ -51,7 +52,7 @@ const downloadPDF = async () => {
   <v-app>
     <v-container>
       <v-row><v-col>
-       
+        <TemplateSwitch />
       </v-col></v-row>
       <h1>Resume Template 1</h1>
       <v-row justify="end">
