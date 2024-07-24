@@ -26,17 +26,31 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div v-if="templateId === 1">
+  <v-text v-if="templateId === 1">
     <v-title class="  ml-6 font-weight-bold mt-2 text-center">SKILLS | Leadership skills | activities | extracurricular activities</v-title>
     <v-divider></v-divider>
   
     <ul class="ml-8"> 
     <li v-for="skill in skills" :key="skill.id">{{ skill.skill}}</li>
   </ul>
-  </div>
+</v-text>
  
  
- 
+  <v-text v-if="templateId === 3">
+    
+    
+    <v-title class="font-weight-bold mt-2 text-center">SKILLS</v-title>
+    <v-divider></v-divider>
+
+    <div class="  text-center">
+      
+        <span v-for="(skill, index) in skills" :key="skill.id" class="display-inline-block">
+          {{ skill.skill }}<span v-if="index < skills.length - 1"> | </span>
+        </span>
+     
+    </div>
+  </v-text>
+  
 
 </template>
 
