@@ -25,7 +25,7 @@ onMounted(async () => {
 
 <template>
 <!-- <div >Template Id: {{ templateId }}</div>--> 
-    <div v-if="templateId === 1"> 
+    <v-text v-if="templateId === 1"> 
       <v-card class="text-center"   tile>
         <v-card-title  >
           <h1><span  >  {{ user.firstName }} {{ user.lastName }}</span></h1>
@@ -34,7 +34,17 @@ onMounted(async () => {
           {{ user.address }} | {{ user.number }} | {{ user.email }} | {{ user.link1 }}
         </v-card-subtitle>
       </v-card>
-    </div>
+    </v-text>
+    <v-text v-if="templateId === 2"> 
+      <v-card    tile>
+        <v-card-title class="header">
+          <h1><span  >  {{ user.firstName }} {{ user.lastName }}</span></h1>
+        </v-card-title>
+        <v-card-subtitle>
+          {{ user.address }}  | {{ user.number }} | {{ user.email }} | {{ user.link1 }}
+        </v-card-subtitle>
+      </v-card>
+    </v-text>
  
   
 </template>
