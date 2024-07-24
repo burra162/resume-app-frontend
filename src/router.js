@@ -27,6 +27,11 @@ const router = createRouter({
       path: "/resume/1",
       name: "resume-1",
       component: () => import("./views/ResumeTemplate1.vue")
+    },
+    {
+      path: "/resume/2",
+      name: "resume-2",
+      component: () => import("./views/ResumeTemplate2.vue")
     }
   ],
 });

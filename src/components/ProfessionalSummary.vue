@@ -25,13 +25,18 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div  v-if="templateId ==1"> 
+  <v-text  v-if="templateId ==1"> 
     <v-card tile>
       <v-card-title class="v-h1 title-with-line">Professional Summary  </v-card-title>
       <v-card-text>{{ user.summary }}</v-card-text>
     </v-card>
-    </div>
-    
+  </v-text>
+  <v-text  v-if="templateId ==2"> 
+    <v-card tile>
+      <v-card-title class="v-h1 ">Professional Summary </v-card-title>
+      <v-card-text class="ml-2">{{ user.summary }}</v-card-text>
+    </v-card>
+  </v-text>
     
   </template>
   
