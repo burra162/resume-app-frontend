@@ -50,7 +50,14 @@ onMounted(async () => {
      
     </div>
   </v-text>
-  
+  <v-text v-if="templateId === 4">
+    <v-title class="  font-weight-bold mt-2  ml-4 text-center">SKILLS</v-title>
+    <v-divider></v-divider> 
+  <ul class="ml-12"> 
+    <li v-for="skill in skills" :key="skill.id">{{ skill.skill }}</li>
+  </ul>
+</v-text>
+
 
 </template>
 

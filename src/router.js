@@ -37,6 +37,11 @@ const router = createRouter({
       path: "/resume/3",
       name: "resume-3",
       component: () => import("./views/ResumeTemplate3.vue")
+    },
+    {
+      path: "/resume/4",
+      name: "resume-4",
+      component: () => import("./views/ResumeTemplate4.vue")
     }
   ],
 });

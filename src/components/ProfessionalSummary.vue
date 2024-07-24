@@ -43,7 +43,13 @@ onMounted(async () => {
       <v-card-text class="ml-2">{{ user.summary }}</v-card-text>
     </v-card>
   </v-text>
-    
+  <v-text  v-if="templateId ==4" class="mt-2"> 
+    <v-card tile> 
+      <v-card-title class="v-h1 ">Objective </v-card-title>
+      <v-card-text class="ml-2">{{ user.summary }}</v-card-text>
+    </v-card>
+  </v-text>
+
   </template>
   
 

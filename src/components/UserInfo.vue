@@ -57,7 +57,16 @@ onMounted(async () => {
       </v-card>
     </v-text>
  
-  
+    <v-text v-if="templateId === 4"> 
+      <v-card class="text-center"   tile>
+        <v-card-title  >
+          <h1><span  >  {{ user.firstName }} {{ user.lastName }}</span></h1>
+        </v-card-title>
+        <v-card-subtitle >
+          {{ user.address }}  ♦ {{ user.number }} ♦ {{ user.email }} ♦ {{ user.link1 }}
+        </v-card-subtitle>
+      </v-card>
+    </v-text>
 </template>
 
 
