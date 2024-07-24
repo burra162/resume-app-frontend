@@ -63,6 +63,25 @@ function formatDateToMonthYear(dateString) {
         </v-card>
     </v-card>
   </v-text>
+
+  <v-text v-if="templateId === 3" tile> 
+    <v-card    class="mb-2">
+        <v-card-title class="   ">Education</v-card-title> 
+        <v-divider   />
+         <v-card v-for="edu in educations" :key="edu.id" class="ml-6"  tile>
+    <v-card-title class="header">
+      <div class="institution">{{ edu.school }}, {{ edu.address }}</div>
+      <div class="dates font-size-12 font-weight-normal">{{ formatDateToMonthYear(edu.startDate) }} - {{ formatDateToMonthYear(edu.endDate) }}</div>
+    </v-card-title>
+    <v-card-subtitle class="header">
+      <div class="institution">{{ edu.degree }}  </div>
+      <div class="dates">{{ edu.gpa ? `GPA: ${edu.gpa}` : '' }} <div v-if="edu.coursework">Coursework: {{ edu.coursework }}</div></div>
+    </v-card-subtitle>
+           
+        </v-card>
+    </v-card>
+  </v-text>
+
  
 </template>
 
