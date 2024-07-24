@@ -647,7 +647,7 @@ async function updateSummary() {
                                                 <td>{{ experience.employer }}</td>
                                                 <td>{{ experience.jobTitle }}</td>
                                                 <td>{{ formatExperienceDate(experience.startDate) }}</td>
-                                                <td>{{ formatExperienceDate(experience.endDate) }}</td>
+                                                <td>{{ experience.endDate?formatExperienceDate(experience.endDate):'Present'  }}</td>
                                             </tr>
                                         </tbody>
                                     </template>
@@ -746,6 +746,7 @@ async function updateSummary() {
                             <v-text-field v-model="experience.startDate" type="date" label="Start Date"></v-text-field>
                             <v-text-field v-model="experience.endDate" type="date" label="End Date"></v-text-field>
                             <v-text-field v-model="experience.address" label="Address"></v-text-field>
+                            <v-textarea v-model="experience.description" label="Description"></v-textarea>
                         </v-form>
                     </v-card-text>
                     <v-card-actions>
