@@ -6,6 +6,8 @@ import JobComponent from "./UserJobs.vue";
 import ProjetComponent from "./Projects.vue";
 import LeadershipsComponent from "./Leaderships.vue"; 
 import AwardsComponent from "./Awards.vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
 
 
 const userDetails = ref({
@@ -479,7 +481,11 @@ async function updateSummary() {
         });
 }
 
-
+function goToResume(resumeTemplateId) {
+  if(resumeTemplateId == 1)
+    router.push({ name: "resume-1" });
+   
+}
 
 </script>
 
@@ -695,6 +701,21 @@ async function updateSummary() {
 
                     <v-col v-else-if="selectedTab === 1">
                             <h2>Templates</h2>
+                            <v-card-text>
+            <v-row>
+              <v-col cols="12" md="6" lg="3">
+                <v-card @click="goToResume(1)" class="cursor-pointer">
+                  <v-card-title>Resume 1 Template</v-card-title>
+                  <v-card-text>
+                    View your resume with Template 1.
+                  </v-card-text>
+                </v-card>
+              </v-col>
+               
+               
+               
+            </v-row>
+          </v-card-text>
                     </v-col>
                     <v-col v-else-if="selectedTab === 2">
                         <JobComponent   />
