@@ -89,6 +89,22 @@ function formatDateToMonthYear_text(dateString) {
     </v-card-text>
   </v-card>
 </v-text>
+<v-text v-if="templateId===4">
+  <v-card-title class="v-h1">WORK EXPERIENCE (or LEADERSHIP, ACTIVITIES, VOLUNTEER WORK) </v-card-title>
+  <v-card v-for="exp in experiences" :key="exp.id" class="mb-4">
+    <v-card-title class="header">
+      <div class="institution">{{ exp.employer }}, {{ exp.jobTitle }},{{ exp.address }} </div>
+      <div class="dates">{{ formatDateToMonthYear_text(exp.startDate) }} - {{ exp.endDate?formatDateToMonthYear_text(exp.endDate):'Present' }}</div>
+    </v-card-title>
+    <v-card-text>
+      <div class="pa-6">
+        <ul>
+          <li v-for="(line, index) in formattedDescription(exp.description)" :key="index" class="pl-2">{{ line }}</li>
+        </ul>
+      </div>
+    </v-card-text>
+  </v-card>
+</v-text>
 
 </template>
 

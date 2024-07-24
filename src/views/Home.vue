@@ -483,11 +483,13 @@ async function updateSummary() {
 
 function goToResume(resumeTemplateId) {
   if(resumeTemplateId == 1)
-    router.push({ name: "resume-1" });
+          router.push({ name: "resume-1" });
   else if(resumeTemplateId==2)
-    router.push({ name: "resume-2" });
-    else if(resumeTemplateId==3)
-    router.push({ name: "resume-3" });
+         router.push({ name: "resume-2" });
+   else if(resumeTemplateId==3)
+         router.push({ name: "resume-3" });
+   else if(resumeTemplateId==4)
+         router.push({ name: "resume-4" });
    
 }
 
@@ -729,6 +731,14 @@ function goToResume(resumeTemplateId) {
                                <v-card-title>Resume 3 Template</v-card-title>
                                 <v-card-text>
                                         View your resume with Template 3.
+                                </v-card-text>
+                            </v-card>
+                    </v-col>
+                    <v-col cols="12" md="6" lg="3">
+                         <v-card @click="goToResume(4)" class="cursor-pointer">
+                               <v-card-title>Resume 4 Template</v-card-title>
+                                <v-card-text>
+                                        View your resume with Template 4.
                                 </v-card-text>
                             </v-card>
                     </v-col>
