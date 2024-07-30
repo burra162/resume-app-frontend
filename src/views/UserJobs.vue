@@ -3,6 +3,7 @@ import { onMounted } from "vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import JobServices from "../services/JobsServices.js"; 
+import ResumeServices from "../services/ResumeService.js"; 
 
 const router = useRouter();
 
@@ -52,6 +53,26 @@ function getJobs() {
       console.log(e);
     });
 }
+function generateResume(jobId) {
+   console.log("User "+user.value.id);
+   console.log(" Job Id " +jobId);
+  //  const resumeData = {
+  //         userId: user.value.id,
+  //         jobId: jobId
+  //       };
+  //     ResumeServices.generateResume(resumeData).then((response) => {
+      
+  //     console.log("Response :" + response)
+  //   })
+  //   .catch((e) => {
+  //     snackbar.value.color = "red";
+  //     snackbar.value.text = "Error creating Resume";
+  //     snackbar.value.value = true;
+  //     console.log(e);
+  //   });
+  router.push({ name: 'newresume', params: { jobId: jobId } });
+}
+
 
 function createJob() {
   if (
@@ -185,6 +206,8 @@ function openAddDialog() {
                   <div class="job-description">{{ job.description }}</div>
                 </v-col>
                 <v-col cols="2" class="text-right">
+                 
+                    
                   <v-btn icon class="mx-2" @click="openEditDialog(job)">
                     <v-icon>mdi-pencil</v-icon>
                   </v-btn>
@@ -192,6 +215,19 @@ function openAddDialog() {
                     <v-icon>mdi-delete</v-icon>
                   </v-btn>
                 </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-btn
+                        @click="generateResume(job.id)"
+                        color="primary"
+                        :loading="loading"
+                        :disabled="loading"
+                      >
+                        <v-icon left>mdi-file-document-outline</v-icon>
+                        Generate Resume 
+                 </v-btn>
+                  </v-col>
               </v-row>
             </v-card>
           </div>
@@ -210,6 +246,7 @@ function openAddDialog() {
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
+          
           <v-btn variant="flat" @click="closeAddDialog">Cancel</v-btn>
           <v-btn variant="flat" color="primary" @click="createJob">Create Job</v-btn>
         </v-card-actions>

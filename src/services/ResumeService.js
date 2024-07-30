@@ -105,6 +105,24 @@ export default {
     deleteSkill(id) {
         return apiClient.delete(`user-details/skill/${id}`);
     },
+    //generare resume
+    generateResume(resumeData)
+    {
+        return apiClient.post("generate-ai-resume", resumeData);
+    }   ,
+     // get skill
+     getResumesByUserId(userId) {
+        return apiClient.get(`/resumes/user/${userId}`);
+    },
 
+     // delete skill
+     deleteAiResumes(id) {
+        return apiClient.delete(`user-details/skill/${id}`);
+    },
+
+    // update skill
+    updateAiResumes(id, skill) {
+        return apiClient.put(`user-details/skill/${id}`, skill);
+    },
 
 }
