@@ -3,6 +3,7 @@ import { onMounted } from "vue";
 import { ref } from "vue";
 import ResumeServices from "../services/ResumeService.js";
 import JobComponent from "./UserJobs.vue";
+import AiResumes from "./AiResumes.vue";
 import ProjetComponent from "./Projects.vue";
 import LeadershipsComponent from "./Leaderships.vue"; 
 import AwardsComponent from "./Awards.vue";
@@ -73,6 +74,7 @@ const tabs = ref([
     "Details",
     "Templates",
     "Job Applications",
+    "AI Resumes"
 ]);
 
 const resumeTabs = ref([
@@ -751,6 +753,9 @@ function goToResume(resumeTemplateId) {
                     </v-col>
                     <v-col v-else-if="selectedTab === 2">
                         <JobComponent   />
+                    </v-col>
+                    <v-col v-else-if="selectedTab === 3">
+                        <AiResumes   />
                     </v-col>
                 </v-row>
             </v-container>
