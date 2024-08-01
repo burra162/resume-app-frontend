@@ -1,7 +1,8 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
-
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
 import UserInfo from '../components/UserInfo.vue';
 import Education from '../components/Education.vue';
 import Experience from '../components/Experience.vue';
@@ -109,7 +110,30 @@ function extractAndParseJson(text) {
 function closeSnackBar() {
   snackbar.value.value = false;
 }
+const downloadPDF = async () => {
+  const resume = document.getElementById("resume");
+  const canvas = await html2canvas(resume);
+  const imgData = canvas.toDataURL("image/png");
+  const pdf = new jsPDF("p", "mm", "a4");
+  const imgWidth = 210; 
+  const pageHeight = 295;  
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  let heightLeft = imgHeight;
 
+  let position = 0;
+
+  pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+  heightLeft -= pageHeight;
+
+  while (heightLeft >= 0) {
+    position = heightLeft - imgHeight;
+    pdf.addPage();
+    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+    heightLeft -= pageHeight;
+  }
+
+  pdf.save("resume-template-1.pdf");
+};
 </script>
 
 <template>
@@ -118,7 +142,11 @@ function closeSnackBar() {
     <!-- <AiTemplateSwitch :resumeId="selectedResumeId" /> -->
    
     <h1>AI Resume Template {{ selectedTemplateId }} </h1>
-
+    <v-row justify="end">
+       
+       <v-btn @click="downloadPDF" justify="end"><v-icon left>mdi-download</v-icon> Download</v-btn>
+    
+     </v-row>
     <v-row justify="end">
       <!-- Download button here -->
     </v-row>
