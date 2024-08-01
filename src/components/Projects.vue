@@ -11,13 +11,13 @@ onMounted(async () => {
     loggedInuser.value = JSON.parse(localStorage.getItem("user"));
     userId.value = loggedInuser.value.id;
     console.log("userId is", userId.value);
-    try {
-      const projects_rs = await ProjectData.getProjectByUserId(userId.value);
-      projects.value = projects_rs.data;
-      console.log("project Data is", projects.value);
-    } catch (error) {
-      console.error('Error fetching projects:', error);
-    }
+    // try {
+    //   const projects_rs = await ProjectData.getProjectByUserId(userId.value);
+    //   projects.value = projects_rs.data;
+    //   console.log("project Data is", projects.value);
+    // } catch (error) {
+    //   console.error('Error fetching projects:', error);
+    // }
   }
 });
 
@@ -37,7 +37,7 @@ function formattedDescription(Description) {
   <div v-if="templateId === 3">
     <v-card-title class="v-h1">Projects </v-card-title>
     <v-divider   />
-    <v-card v-for="project in projects" :key="project.id" class="mb-4">
+    <v-card v-for="project in projectsDetails" :key="project.id" class="mb-4">
       <v-card-title class="header">
         <div class="institution">{{ project.organizationName }},  {{ project.city }}, {{ project.state }}</div>
         <div class="dates"> {{ project.projectTitle }}, {{ formatDateToMonthYear_text(project.startDate) }} - {{ formatDateToMonthYear_text(project.endDate) }}</div>
@@ -59,6 +59,10 @@ export default {
     templateId: {
       type: Number,
       required: true
+    },
+    projectsDetails:{
+      type:Object,
+      required:true
     }
   }
 };

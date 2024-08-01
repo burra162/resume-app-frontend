@@ -11,44 +11,38 @@ onMounted(async () => {
   if (localStorage.getItem("user") !== null) {
     loggedInuser.value = JSON.parse(localStorage.getItem("user"));
     userId.value = loggedInuser.value.id;
-    console.log("userId is", userId.value);
-    try {
-      const professionalInfo = await ProfessionalSummaryService.getSummary(userId.value);
-      console.log("userData is", professionalInfo.data);
-      user.value = professionalInfo.data;
-      console.log(user.value);
-    } catch (error) {
-      console.error('Error fetching user:', error);
-    }
+    console.log("userId is", userId.value); 
   }
 });
 </script>
 
 <template>
-  <v-text  v-if="templateId ==1"> 
+  <!-- <div >Template Id: {{ templateId }}</div> 
+  <div >professionalDetails Id: {{ professionalDetails }}</div>  -->
+ <div   v-if="templateId ==1">  
     <v-card tile>
       <v-card-title class="v-h1 title-with-line">Professional Summary  </v-card-title>
-      <v-card-text>{{ user.summary }}</v-card-text>
+      <v-card-text>{{ professionalDetails.summary }}</v-card-text>
     </v-card>
-  </v-text>
-  <v-text  v-if="templateId ==2"> 
+  </div>
+ <div   v-if="templateId ==2"> 
     <v-card tile>
       <v-card-title class="v-h1 ">Professional Summary </v-card-title>
-      <v-card-text class="ml-2">{{ user.summary }}</v-card-text>
+      <v-card-text class="ml-2">{{ professionalDetails.summary }}</v-card-text>
     </v-card>
-  </v-text>
+  </div>
 
-  <v-text  v-if="templateId ==3" class="mt-2"> 
+ <div   v-if="templateId ==3" class="mt-2"> 
     <v-card tile> 
-      <v-card-text class="ml-2">{{ user.summary }}</v-card-text>
+      <v-card-text class="ml-2">{{ professionalDetails.summary }}</v-card-text>
     </v-card>
-  </v-text>
-  <v-text  v-if="templateId ==4" class="mt-2"> 
+  </div>
+ <div   v-if="templateId ==4" class="mt-2"> 
     <v-card tile> 
       <v-card-title class="v-h1 ">Objective </v-card-title>
-      <v-card-text class="ml-2">{{ user.summary }}</v-card-text>
+      <v-card-text class="ml-2">{{ professionalDetails.summary }}</v-card-text>
     </v-card>
-  </v-text>
+  </div>
 
   </template>
   
@@ -56,15 +50,17 @@ onMounted(async () => {
 <script>
     export default {
       props: {
-        ProfessionalSummary: {
-          type: Object,
-          required: true
-        },
+        
         templateId: {
           type: Number,
           required: true
-        }
+        },
+        professionalDetails: {
+          type: Object,
+          required: true
+        } 
       }
+      
     
     };
 </script>

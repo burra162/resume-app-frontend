@@ -221,8 +221,7 @@ function openAddDialog() {
                   <v-btn
                         @click="generateResume(job.id)"
                         color="primary"
-                        :loading="loading"
-                        :disabled="loading"
+                       
                       >
                         <v-icon left>mdi-file-document-outline</v-icon>
                         Generate Resume 

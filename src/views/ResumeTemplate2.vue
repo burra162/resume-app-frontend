@@ -10,9 +10,15 @@ import Experience from '../components/Experience.vue';
 import ProfessionalSummary from "../components/ProfessionalSummary.vue";  
 import Skills from "../components/Skills.vue";  
 import TemplateSwitch from "../components/TemplateSwitch.vue";  
+import ResumeServices from "../services/ResumeService.js"; 
  
 
-const router = useRouter();
+const router = useRouter(); 
+const userDetails = ref({});
+const professionalDetails= ref({});
+const educationDetails= ref({}); 
+const experienceDetails= ref({});
+const skillsDetails= ref({});
 const user = ref({});
 
 onMounted(async () => {
@@ -21,6 +27,51 @@ onMounted(async () => {
   } else {
     router.push({ name: "login" });
   }
+    //user details 
+    try {
+    console.log("Getting userDetails   "+user.value.id);
+      const userData = await ResumeServices.getUserDetails(user.value.id);
+      userDetails.value =  userData.data;
+      console.log("userData is-----", userData.data);
+      userDetails.value = userData.data;
+      console.log(userDetails.value);
+    } catch (error) {
+      console.error('Error fetching userDetails:--', error);
+    }
+    //Professional summary
+    try {
+      const professionalInfo = await ResumeServices.getSummary(user.value.id);
+      
+      professionalDetails.value = professionalInfo.data;
+      console.log("professionalInfo is", professionalDetails.value);
+    } catch (error) {
+      console.error('Error fetching professionalDetails:--', error);
+    }
+    //education details
+    try {
+      const fetchedEduData = await ResumeServices.getEducation(user.value.id);
+      educationDetails.value = fetchedEduData.data;
+      console.log("Edu Data is----", educationDetails.value);
+    } catch (error) {
+      console.error('Error fetching educations:--', error);
+    }
+    //Experience
+    try {
+      const expData = await ResumeServices.getExperience(user.value.id);
+      experienceDetails.value = expData.data;
+      console.log("Exp Data is", experienceDetails.value);
+    } catch (error) {
+      console.error('Error fetching experiences:--', error);
+    }
+    //Skills
+    try {
+      const skillsData = await ResumeServices.getSkills(user.value.id);
+      console.log("Skills  is--", skillsData.data); 
+      skillsDetails.value = skillsData.data;
+      console.log("Skills Data is", skillsDetails.value);
+    } catch (error) {
+      console.error('Error fetching skills:', error);
+    }
 });
 
 const downloadPDF = async () => {
@@ -63,12 +114,11 @@ const downloadPDF = async () => {
      
       </v-row>
      <div class="mt-5"></div>
-     <div id="resume"> 
-      
-      <user-info :user="user" v-if="user"  :templateId="2"></user-info>
-      <ProfessionalSummary :ProfessionalSummary="user.Professionalsummary" v-if="user" :templateId="2"></ProfessionalSummary>
-      <education :education="user.educations" v-if="user" :templateId="2"></education>
-      <experience :professional_summary="user.experiences" v-if="user" :template-id="2"></experience> 
+     <div id="resume">  
+      <user-info :userData="userDetails" :user="user"  v-if="user"  :templateId="2"></user-info>
+      <ProfessionalSummary :professionalDetails="professionalDetails"  v-if="user" :templateId="2"></ProfessionalSummary>
+      <education :educationDetails="educationDetails"   v-if="user" :templateId="2"></education>
+      <experience :experienceDetails="experienceDetails"  v-if="user" :template-id="2"></experience> 
     </div>
     </v-container>
   </v-app>

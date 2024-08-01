@@ -10,9 +10,18 @@ import Experience from '../components/Experience.vue';
 import ProfessionalSummary from "../components/ProfessionalSummary.vue";  
 import Projects from "../components/Projects.vue";  
 import Skills from "../components/Skills.vue";   
-import TemplateSwitch from "../components/TemplateSwitch.vue";  
+import TemplateSwitch from "../components/TemplateSwitch.vue";   
+import ResumeServices from "../services/ResumeService.js";
+import ProjectServices from "../services/ProjectServices.js";
 
+ 
 const router = useRouter();
+const userDetails = ref({});
+const professionalDetails= ref({});
+const educationDetails= ref({}); 
+const experienceDetails= ref({});
+const skillsDetails= ref({});
+const projectsDetails= ref({});
 const user = ref({});
 
 onMounted(async () => {
@@ -21,6 +30,59 @@ onMounted(async () => {
   } else {
     router.push({ name: "login" });
   }
+  //user details 
+  try {
+    console.log("Getting userDetails   "+user.value.id);
+      const userData = await ResumeServices.getUserDetails(user.value.id);
+      userDetails.value =  userData.data;
+      console.log("userData is-----", userData.data);
+      userDetails.value = userData.data;
+      console.log(userDetails.value);
+    } catch (error) {
+      console.error('Error fetching userDetails:--', error);
+    }
+    //Professional summary
+    try {
+      const professionalInfo = await ResumeServices.getSummary(user.value.id);
+      
+      professionalDetails.value = professionalInfo.data;
+      console.log("professionalInfo is", professionalDetails.value);
+    } catch (error) {
+      console.error('Error fetching professionalDetails:--', error);
+    }
+    //education details
+    try {
+      const fetchedEduData = await ResumeServices.getEducation(user.value.id);
+      educationDetails.value = fetchedEduData.data;
+      console.log("Edu Data is----", educationDetails.value);
+    } catch (error) {
+      console.error('Error fetching educations:--', error);
+    }
+    //Experience
+    try {
+      const expData = await ResumeServices.getExperience(user.value.id);
+      experienceDetails.value = expData.data;
+      console.log("Exp Data is", experienceDetails.value);
+    } catch (error) {
+      console.error('Error fetching experiences:--', error);
+    }
+    //Skills
+    try {
+      const skillsData = await ResumeServices.getSkills(user.value.id);
+      console.log("Skills  is--", skillsData.data); 
+      skillsDetails.value = skillsData.data;
+      console.log("Skills Data is", skillsDetails.value);
+    } catch (error) {
+      console.error('Error fetching skills:', error);
+    }
+    //Projects
+    try {
+      const projects_rs = await ProjectServices.getProjectByUserId(user.value.id);
+      projectsDetails.value = projects_rs.data;
+      console.log("project Data is", projectsDetails.value);
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+    }
 });
 
 const downloadPDF = async () => {
@@ -63,14 +125,14 @@ const downloadPDF = async () => {
      
       </v-row>
      <div class="mt-5"></div>
-     <div id="resume"> 
+     <div id="resume">  
       
-      <user-info :user="user" v-if="user"  :templateId="3"></user-info>
-      <ProfessionalSummary   v-if="user" :templateId="3"></ProfessionalSummary>
-      <education   v-if="user" :templateId="3"></education> 
-      <experience   v-if="user" :template-id="3"></experience>
-      <Projects   v-if="user" :template-id="3"></Projects>
-      <skills   v-if="user" :templateId="3"></skills>
+      <user-info :userData="userDetails" :user="user" v-if="user"  :templateId="3"></user-info>
+      <ProfessionalSummary  :professionalDetails="professionalDetails"  v-if="user" :templateId="3"></ProfessionalSummary>
+      <education :educationDetails="educationDetails"   v-if="user" :templateId="3"></education> 
+      <experience  :experienceDetails="experienceDetails"  v-if="user" :template-id="3"></experience>
+      <Projects :projectsDetails="projectsDetails"   v-if="user" :template-id="3"></Projects>
+      <skills  :skillsDetails="skillsDetails" v-if="user" :templateId="3"></skills>
     </div>
     </v-container>
   </v-app>

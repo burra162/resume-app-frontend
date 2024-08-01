@@ -12,13 +12,13 @@ onMounted(async () => {
     loggedInuser.value = JSON.parse(localStorage.getItem("user"));
     userId.value = loggedInuser.value.id;
     console.log("userId is", userId.value);
-    try {
-      const LeaderShipData = await LeaderShipService.getleadershipByUserId(userId.value);
-      leaderships.value = LeaderShipData.data;
-      console.log("Leadership Data is", LeaderShipData.data);
-    } catch (error) {
-      console.error('Error fetching leaderships:', error);
-    }
+    // try {
+    //   const LeaderShipData = await LeaderShipService.getleadershipByUserId(userId.value);
+    //   leaderships.value = LeaderShipData.data;
+    //   console.log("Leadership Data is", LeaderShipData.data);
+    // } catch (error) {
+    //   console.error('Error fetching leaderships:', error);
+    // }
   }
 });
 
@@ -36,14 +36,14 @@ function formattedDescription(description) {
 <template>
   <div v-if="templateId === 4">
     <v-card-title class="v-h1">LEADERSHIP (or WORK EXPERIENCE, ACTIVITIES, VOLUNTEER WORK) </v-card-title>
-    <v-card v-for="leaderships_list in leaderships" :key="leaderships_list.id" class="mb-4 ml-2">
+    <v-card v-for="leaderships_list in leadershipDetails" :key="leaderships_list.id" class="mb-4 ml-2">
      
          
         <v-card-title class="v-h2">{{ leaderships_list.organizationName }}</v-card-title>
         
           
-          <v-text class="ml-6">  <strong>{{ leaderships_list.positionTitle }} </strong> ({{ formatDateToMonthYear_text(leaderships_list.startDate) }} - 
-            {{ leaderships_list.endDate ? formatDateToMonthYear_text(leaderships_list.endDate) : 'Present' }})</v-text>
+          <div class="ml-6">  <strong>{{ leaderships_list.positionTitle }} </strong> ({{ formatDateToMonthYear_text(leaderships_list.startDate) }} - 
+            {{ leaderships_list.endDate ? formatDateToMonthYear_text(leaderships_list.endDate) : 'Present' }})</div>
          
        
       <v-card-text>
@@ -63,7 +63,12 @@ export default {
     templateId: {
       type: Number,
       required: true
-    }
+    },
+    leadershipDetails:
+  {
+    type:Object,
+    required:true
+  }
   }
 };
 </script>

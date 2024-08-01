@@ -110,14 +110,16 @@ export default {
     {
         return apiClient.post("generate-ai-resume", resumeData);
     }   ,
-     // get skill
+    
      getResumesByUserId(userId) {
         return apiClient.get(`/resumes/user/${userId}`);
     },
-
-     // delete skill
-     deleteAiResumes(id) {
-        return apiClient.delete(`user-details/skill/${id}`);
+    getResumeById(resumeId) {
+        return apiClient.get(`/resumes/${resumeId}`);
+    },
+     
+    deleteResume(id) {
+        return apiClient.delete(`resumes/${id}`);
     },
 
     // update skill
