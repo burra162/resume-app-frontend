@@ -11,13 +11,13 @@ onMounted(async () => {
     loggedInuser.value = JSON.parse(localStorage.getItem("user"));
     userId.value = loggedInuser.value.id;
     console.log("userId is", userId.value);
-    try {
-      const fetchedEduData = await eduData.getEducation(userId.value);
-      educations.value = fetchedEduData.data;
-      console.log("Edu Data is", educations.value);
-    } catch (error) {
-      console.error('Error fetching educations:', error);
-    }
+    // try {
+    //   const fetchedEduData = await eduData.getEducation(userId.value);
+    //   educations.value = fetchedEduData.data;
+    //   console.log("Edu Data is", educations.value);
+    // } catch (error) {
+    //   console.error('Error fetching educations:', error);
+    // }
   }
 });
 function formatDateToMonthYear(dateString) {
@@ -29,14 +29,14 @@ function formatDateToMonthYear(dateString) {
 </script>
 
 <template>
-  <v-text v-if="templateId === 1"> 
+  <div v-if="templateId === 1">  
     <v-card tile>
         <v-card-title class="v-h1 title-with-line">EDUCATION</v-card-title>
         </v-card>
  
 
  
-  <v-card v-for="edu in educations" :key="edu.id" >
+  <v-card v-for="edu in educationDetails" :key="edu.id" >
     <v-card-title class="header">
       <div class="institution">{{ edu.school }}, {{ edu.address }}</div>
       <div class="dates">{{ formatDateToMonthYear(edu.startDate) }} - {{ formatDateToMonthYear(edu.endDate) }}</div>
@@ -47,28 +47,28 @@ function formatDateToMonthYear(dateString) {
       <div v-if="edu.coursework">Coursework: {{ edu.coursework }}</div>
     </v-card-subtitle>
   </v-card>
-</v-text>
-<v-text v-if="templateId === 2" tile> 
+</div>
+<div v-if="templateId === 2" tile> 
     <v-card    class="mb-2">
         <v-card-title class="   ">EDUCATION</v-card-title> 
-         <v-card v-for="edu in educations" :key="edu.id" class="ml-6"  tile>
-             <v-text tile>
+         <v-card v-for="edu in educationDetails" :key="edu.id" class="ml-6"  tile>
+             <div tile>
                <span  class="   font-weight-bold"> {{ edu.school }}, {{ edu.address }} </span> <span>| {{ formatDateToMonthYear(edu.startDate) }} - {{ formatDateToMonthYear(edu.endDate) }}</span> 
-            </v-text>
+            </div>
             <v-card-subtitle tile >
-              <v-text class="font-weight-bold">{{ edu.degree }}  </v-text>
+              <div class="font-weight-bold">{{ edu.degree }}  </div>
               <div>{{ edu.gpa ? `GPA: ${edu.gpa}` : '' }}</div> 
               <div v-if="edu.coursework">Coursework: {{ edu.coursework }}</div>
             </v-card-subtitle>
         </v-card>
     </v-card>
-  </v-text>
+  </div>
 
-  <v-text v-if="templateId === 3" tile> 
+  <div v-if="templateId === 3" tile> 
     <v-card    class="mb-2">
         <v-card-title class="   ">Education</v-card-title> 
         <v-divider   />
-         <v-card v-for="edu in educations" :key="edu.id" class="ml-6"  tile>
+         <v-card v-for="edu in educationDetails" :key="edu.id" class="ml-6"  tile>
     <v-card-title class="header">
       <div class="institution">{{ edu.school }}, {{ edu.address }}</div>
       <div class="dates font-size-12 font-weight-normal">{{ formatDateToMonthYear(edu.startDate) }} - {{ formatDateToMonthYear(edu.endDate) }}</div>
@@ -80,16 +80,16 @@ function formatDateToMonthYear(dateString) {
            
         </v-card>
     </v-card>
-  </v-text>
+  </div>
 
-  <v-text v-if="templateId === 4" tile> 
+  <div v-if="templateId === 4" tile> 
     <v-card    class="mb-2">
         <v-card-title class="   ">EDUCATION</v-card-title> 
-         <v-card v-for="edu in educations" :key="edu.id" class="ml-6"  tile>
-    <v-text  >
+         <v-card v-for="edu in educationDetails" :key="edu.id" class="ml-6"  tile>
+    <div  >
       <div class=""><span class="font-weight-bold"> {{ edu.school }}</span>, {{ edu.address }} {{ formatDateToMonthYear(edu.startDate) }} - {{ formatDateToMonthYear(edu.endDate) }}</div>
       
-    </v-text>
+    </div>
     <v-card-subtitle class=" ">
       <div class=" ">{{ edu.degree }} in {{ edu.fieldOfStudy }}</div>
       <div class=" ">{{ edu.gpa ? `GPA: ${edu.gpa}` : '' }}</div>
@@ -98,7 +98,7 @@ function formatDateToMonthYear(dateString) {
            
         </v-card>
     </v-card>
-  </v-text>
+  </div>
 
 
  
@@ -108,10 +108,11 @@ function formatDateToMonthYear(dateString) {
     export default {
       
         
-        props: {
-            education: {
-                type: Array,
-                required: true
+        props: { 
+            educationDetails:
+            {
+              type:Object,
+              required:true
             },
             templateId: {
                 type: Number,

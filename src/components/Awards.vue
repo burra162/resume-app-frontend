@@ -12,13 +12,13 @@ onMounted(async () => {
     loggedInuser.value = JSON.parse(localStorage.getItem("user"));
     userId.value = loggedInuser.value.id;
     console.log("userId is", userId.value);
-    try {
-      const AwardData = await AwardService.getAwardsByUserId(userId.value);
-      awards.value = AwardData.data;
-      console.log("Leadership Data is", AwardData.data);
-    } catch (error) {
-      console.error('Error fetching awards:', error);
-    }
+    // try {
+    //   const AwardData = await AwardService.getAwardsByUserId(userId.value);
+    //   awards.value = AwardData.data;
+    //   console.log("Leadership Data is", AwardData.data);
+    // } catch (error) {
+    //   console.error('Error fetching awards:', error);
+    // }
   }
 });
 
@@ -36,14 +36,14 @@ function formattedDescription(description) {
 <template>
   <div v-if="templateId === 4">
     <v-card-title class="v-h1">HONORS (and/or AWARDS) </v-card-title>
-    <v-card v-for="awards_list in awards" :key="awards_list.id" class="mb-4 ml-2">
+    <v-card v-for="awards_list in awardsDetails" :key="awards_list.id" class="mb-4 ml-2">
      
          
         <v-card-title class="v-h2">{{ awards_list.organizationName }}</v-card-title>
         
           
-          <v-text class="ml-6">  <strong>{{ awards_list.awardTitle }} </strong> ({{ formatDateToMonthYear_text(awards_list.startDate) }} - 
-            {{ awards_list.endDate ? formatDateToMonthYear_text(awards_list.endDate) : 'Present' }})</v-text>
+          <div class="ml-6">  <strong>{{ awards_list.awardTitle }} </strong> ({{ formatDateToMonthYear_text(awards_list.startDate) }} - 
+            {{ awards_list.endDate ? formatDateToMonthYear_text(awards_list.endDate) : 'Present' }})</div>
          
        
       <v-card-text>
@@ -63,6 +63,11 @@ export default {
     templateId: {
       type: Number,
       required: true
+    },
+    awardsDetails:
+    {
+      type:Object,
+      required:true
     }
   }
 };

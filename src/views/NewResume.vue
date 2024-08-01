@@ -57,7 +57,7 @@ function closeSnackBar() {
 }
 
 async function submitForm() {
-    console.log("submitting the form..")
+    console.log("submitting the form.."); 
     if (valid.value) {
         loading.value = true;
         const uinfo = JSON.parse(localStorage.getItem("user"));
@@ -72,6 +72,10 @@ async function submitForm() {
             console.log("submitting the data "+resumeData);
             const response = await ResumeServices.generateResume(resumeData);
             console.log("Response:", response);
+            snackbar.value.color = "success";
+            snackbar.value.text = "Resume generated successfully";
+            snackbar.value.value = true;
+            router.push({ name: "airesumes" });
         } catch (e) {
             snackbar.value.color = "red";
             snackbar.value.text = "Error creating Resume";
@@ -79,6 +83,7 @@ async function submitForm() {
             console.log(e);
         } finally {
             loading.value = false;
+            
         }
     }
 }
@@ -97,13 +102,13 @@ async function submitForm() {
             <!-- Display Job Title -->
             <v-container>
                 <v-text class="font-weight-bold">Job Title:</v-text>
-                <v-text>{{ jobInfo.jobTitle }}</v-text>
+                <v-div>{{ jobInfo.jobTitle }}</v-div>
             </v-container>
             
             <!-- Display Job Description -->
             <v-container>
                 <v-text class="font-weight-bold">Job Description:</v-text>
-                <v-text>{{ jobInfo.description }}</v-text>
+                <v-div>{{ jobInfo.description }}</v-div>
             </v-container>
       
             <!-- Dropdown for resume templates -->

@@ -12,51 +12,51 @@ onMounted(async () => {
     loggedInuser.value = JSON.parse(localStorage.getItem("user"));
     userId.value = loggedInuser.value.id;
     console.log("userId is", userId.value);
-    try {
-      const skillsData = await SkillData.getSkills(userId.value);
-      console.log("Skills RAW Data is", skillsData.data);
-      skills.value = [];
-      skills.value = skillsData.data;
-      console.log("Skills Data is", skills.value);
-    } catch (error) {
-      console.error('Error fetching skills:', error);
-    }
+    // try {
+    //   const skillsData = await SkillData.getSkills(userId.value);
+    //   console.log("Skills RAW Data is", skillsData.data);
+    //   skills.value = [];
+    //   skills.value = skillsData.data;
+    //   console.log("Skills Data is", skills.value);
+    // } catch (error) {
+    //   console.error('Error fetching skills:', error);
+    // }
   }
 });
 </script>
 
 <template>
-  <v-text v-if="templateId === 1">
-    <v-title class="  ml-6 font-weight-bold mt-2 text-center">SKILLS | Leadership skills | activities | extracurricular activities</v-title>
+  <div v-if="templateId === 1">
+    <div class="  ml-6 font-weight-bold mt-2 text-center">SKILLS | Leadership skills | activities | extracurricular activities</div>
     <v-divider></v-divider>
   
     <ul class="ml-8"> 
-    <li v-for="skill in skills" :key="skill.id">{{ skill.skill}}</li>
+    <li v-for="skill in skillsDetails" :key="skill.id">{{ skill.skill}}</li>
   </ul>
-</v-text>
+</div>
  
  
-  <v-text v-if="templateId === 3">
+  <div v-if="templateId === 3">
     
     
-    <v-title class="font-weight-bold mt-2 text-center">SKILLS</v-title>
+    <div class="font-weight-bold mt-2 text-center">SKILLS</div>
     <v-divider></v-divider>
 
     <div class="  text-center">
       
-        <span v-for="(skill, index) in skills" :key="skill.id" class="display-inline-block">
-          {{ skill.skill }}<span v-if="index < skills.length - 1"> | </span>
+        <span v-for="(skill, index) in skillsDetails" :key="skill.id" class="display-inline-block">
+          {{ skill.skill }}  <span v-if="index < skillsDetails.length - 1"> | </span>
         </span>
      
     </div>
-  </v-text>
-  <v-text v-if="templateId === 4">
-    <v-title class="  font-weight-bold mt-2  ml-4 text-center">SKILLS</v-title>
+  </div>
+  <div v-if="templateId === 4">
+    <div class="  font-weight-bold mt-2  ml-4 text-center">SKILLS</div>
     <v-divider></v-divider> 
   <ul class="ml-12"> 
-    <li v-for="skill in skills" :key="skill.id">{{ skill.skill }}</li>
+    <li v-for="skill in skillsDetails" :key="skill.id">{{ skill.skill }}</li>
   </ul>
-</v-text>
+</div>
 
 
 </template>
@@ -67,8 +67,14 @@ export default {
     templateId: {
       type: Number,
       required: true
+    },
+    skillsDetails:
+    {
+      type: Object,
+      required:true
     }
   }
+  
 };
 </script>
 

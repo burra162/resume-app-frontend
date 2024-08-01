@@ -62,82 +62,13 @@ function getResumes() {
       console.log(e);
     });
 }
-function generateResume(ResumeId) {
+function viewResume(Resume) {
    console.log("User "+user.value.id);
-   console.log(" Resume Id " +ResumeId); 
-  router.push({ name: 'newresume', params: { ResumeId: ResumeId } });
+   console.log(" Resume Id " +Resume.id); 
+   console.log(" Template Id " +Resume.templateId); 
+  router.push({ name: 'airesumetemplate', params: { resumeId: Resume.id,templateId:Resume.templateId } });
 }
-
-
-function createResume() {
-  if (
-    Resume.value.companyName === "" ||
-    Resume.value.ResumeTitle === "" ||
-    Resume.value.skillsRequired === "" ||
-    Resume.value.description === ""  
-  ) {
-    snackbar.value.color = "red";
-    snackbar.value.text = "Please fill all fields";
-    snackbar.value.value = true;
-    return;
-  }
-  Resume.value.userId = user.value.id;
-
-  ResumeServices.createResume(Resume.value)
-    .then((response) => {
-      getResumes();
-      snackbar.value.color = "green";
-      snackbar.value.text = "Resume created successfully";
-      snackbar.value.value = true;
-
-      Resume.value = {
-        companyName: "",
-        ResumeTitle: "",
-        skillsRequired: "",
-        description: "" 
-      };
-
-      addDialog.value = false;
-    })
-    .catch((e) => {
-      snackbar.value.color = "red";
-      snackbar.value.text = "Error creating Resume";
-      snackbar.value.value = true;
-      console.log(e);
-    });
-}
-
-function updateResume() {
-  if (
-    selectedResume.value.companyName === "" ||
-    selectedResume.value.ResumeTitle === "" ||
-    selectedResume.value.skillsRequired === "" ||
-    selectedResume.value.description === ""  
-  ) {
-    snackbar.value.color = "red";
-    snackbar.value.text = "Please fill all fields";
-    snackbar.value.value = true;
-    return;
-  }
-
-  ResumeServices.updateResume(selectedResume.value.id, selectedResume.value)
-    .then((response) => {
-      getResumes();
-      snackbar.value.color = "green";
-      snackbar.value.text = "Resume updated successfully";
-      snackbar.value.value = true;
-
-      selectedResume.value = {};
-      dialog.value = false;
-    })
-    .catch((e) => {
-      snackbar.value.color = "red";
-      snackbar.value.text = "Error updating Resume";
-      snackbar.value.value = true;
-      console.log(e);
-    });
-}
-
+ 
 function onDeleteResume(Resume) {
   if (!confirm("Are you sure you want to delete this Resume?")) {
     return;
@@ -175,7 +106,29 @@ function openAddDialog() {
 }
 function formatDate(date) {
   const d = new Date(date);
-  return `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
+
+  // Extracting date components
+  const month = d.getMonth() + 1;
+  const day = d.getDate();
+  const year = d.getFullYear();
+
+  // Extracting time components
+  let hours = d.getHours();
+  const minutes = d.getMinutes();
+  const seconds = d.getSeconds();
+
+  // Determine AM or PM
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+
+  // Convert hours from 24-hour to 12-hour format
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+
+  // Format minutes and seconds to always have two digits
+  const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+  const formattedSeconds = seconds < 10 ? '0' + seconds : seconds;
+
+  return `${month}/${day}/${year} ${hours}:${formattedMinutes}:${formattedSeconds} ${ampm}`;
 }
 function getJobById(jobId) {
   return Jobs.value.find(job => job.id === jobId) || {};
@@ -207,23 +160,24 @@ function getJobById(jobId) {
                   <div class="Resume-skills">Template Id {{ Resume.templateId }}</div>
                   
                 </v-col>
-                <v-col cols="2" class="text-right">
-                 
-                    
-                 
-                 
-                </v-col>
+                <v-col cols="2">
+                <v-btn icon class="mx-2" @click="openEditDialog(exp)">
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+  
+                <v-btn icon @click="onDeleteResume(Resume)">
+                  <v-icon>mdi-delete</v-icon>
+                </v-btn>
+              </v-col>
               </v-row>
               <v-row>
                 <v-col>
                   <v-btn
-                        @click="generateResume(Resume.id)"
-                        color="primary"
-                        :loading="loading"
-                        :disabled="loading"
+                        @click="viewResume(Resume)"
+                        color="primary" 
                       >
                         <v-icon left>mdi-file-document-outline</v-icon>
-                        View Resume 
+                        View Resume  
                  </v-btn>
                   </v-col>
               </v-row>

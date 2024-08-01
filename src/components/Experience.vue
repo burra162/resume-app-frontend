@@ -11,13 +11,13 @@ onMounted(async () => {
     loggedInuser.value = JSON.parse(localStorage.getItem("user"));
     userId.value = loggedInuser.value.id;
     console.log("userId is", userId.value);
-    try {
-      const expData = await ExpData.getExperience(userId.value);
-      experiences.value = expData.data;
-      console.log("Exp Data is", experiences.value);
-    } catch (error) {
-      console.error('Error fetching experiences:', error);
-    }
+    // try {
+    //   const expData = await ExpData.getExperience(userId.value);
+    //   experiences.value = expData.data;
+    //   console.log("Exp Data is", experiences.value);
+    // } catch (error) {
+    //   console.error('Error fetching experiences:', error);
+    // }
   }
 });
 
@@ -38,7 +38,7 @@ function formatDateToMonthYear_text(dateString) {
     
     <v-card-title class="v-h1 title-with-line">PROFESSIONAL EXPERIENCE </v-card-title>
     
-  <v-card v-for="exp in experiences" :key="exp.id">
+  <v-card v-for="exp in experienceDetails" :key="exp.id">
 
     <v-card-title class="header">
       <div class="institution">{{ exp.employer }}, {{ exp.jobTitle }},{{ exp.address }} </div>
@@ -58,7 +58,7 @@ function formatDateToMonthYear_text(dateString) {
 <div v-if="templateId===2">
   <v-card-title class="v-h1">Experience </v-card-title>
   <v-divider   />
-  <v-card v-for="exp in experiences" :key="exp.id" class="mb-4">
+  <v-card v-for="exp in experienceDetails" :key="exp.id" class="mb-4">
     <v-card-title class="header">
       <div class="institution">{{ exp.employer }}, {{ exp.jobTitle }},{{ exp.address }} </div>
       <div class="dates">{{ formatDateToMonthYear_text(exp.startDate) }} - {{ exp.endDate?formatDateToMonthYear_text(exp.endDate):'Present' }}</div>
@@ -72,10 +72,10 @@ function formatDateToMonthYear_text(dateString) {
     </v-card-text>
   </v-card>
   </div>
-  <v-text v-if="templateId===3">
+  <div v-if="templateId===3">
   <v-card-title class="v-h1">Experience </v-card-title>
   <v-divider   />
-  <v-card v-for="exp in experiences" :key="exp.id" class="mb-4">
+  <v-card v-for="exp in experienceDetails" :key="exp.id" class="mb-4">
     <v-card-title class="header">
       <div class="institution">{{ exp.employer }}, {{ exp.jobTitle }},{{ exp.address }} </div>
       <div class="dates">{{ formatDateToMonthYear_text(exp.startDate) }} - {{ formatDateToMonthYear_text(exp.endDate) }}</div>
@@ -88,10 +88,10 @@ function formatDateToMonthYear_text(dateString) {
       </div>
     </v-card-text>
   </v-card>
-</v-text>
-<v-text v-if="templateId===4">
+</div>
+<div v-if="templateId===4">
   <v-card-title class="v-h1">WORK EXPERIENCE (or LEADERSHIP, ACTIVITIES, VOLUNTEER WORK) </v-card-title>
-  <v-card v-for="exp in experiences" :key="exp.id" class="mb-4">
+  <v-card v-for="exp in experienceDetails" :key="exp.id" class="mb-4">
     <v-card-title class="header">
       <div class="institution">{{ exp.employer }}, {{ exp.jobTitle }},{{ exp.address }} </div>
       <div class="dates">{{ formatDateToMonthYear_text(exp.startDate) }} - {{ exp.endDate?formatDateToMonthYear_text(exp.endDate):'Present' }}</div>
@@ -104,7 +104,7 @@ function formatDateToMonthYear_text(dateString) {
       </div>
     </v-card-text>
   </v-card>
-</v-text>
+</div>
 
 </template>
 
@@ -114,6 +114,11 @@ function formatDateToMonthYear_text(dateString) {
             templateId: {
                 type: Number,
                 required: true
+            },
+            experienceDetails:
+            {
+              type:Object,
+              required : true
             }
         } 
     };

@@ -53,7 +53,15 @@ const router = createRouter({
       path: "/airesumes/",
       name: "airesumes",
       component: () => import("./views/AiResumes.vue")
-    }
+    },
+    ,
+    {
+      path: "/airesumetemplate/:resumeId/:templateId",
+      name: "airesumetemplate",
+      component: () => import("./views/AiResumeTemplate.vue")
+    },
+  
+    
   ],
 });
 
