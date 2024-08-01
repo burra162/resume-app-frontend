@@ -30,7 +30,12 @@ const selectedTemplateId = ref('');
 // Vue Router and Route
 const route = useRoute();
 const router = useRouter();
-
+const resumeTemplateTabs = ref([
+    "Template 1",
+    "Template 2",
+    "Template 3",
+    "Template 4", 
+]);
 
 // Snackbar configuration
 const snackbar = ref({
@@ -133,14 +138,21 @@ const downloadPDF = async () => {
   }
 
   pdf.save("resume-template-1.pdf");
-};
+}
+function changeResumeTemplateTab(index) {
+  selectedTemplateId.value = index+1;
+}
 </script>
 
 <template>
   <v-container>
     <!-- Pass dynamic resumeId to AiTemplateSwitch -->
     <!-- <AiTemplateSwitch :resumeId="selectedResumeId" /> -->
-   
+    <v-tabs bg-color="primary" fixed-tabs>
+                            <v-tab v-for="(tab, index) in resumeTemplateTabs" :key="index" @click="changeResumeTemplateTab(index)">
+                                {{ tab }}
+                            </v-tab>
+                        </v-tabs>
     <h1>AI Resume Template {{ selectedTemplateId }} </h1>
     <v-row justify="end">
        
