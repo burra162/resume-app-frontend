@@ -1,6 +1,5 @@
 <script setup>
-import { onMounted } from "vue";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import UserServices from "../services/UserServices";
 
 const snackbar = ref({
@@ -15,7 +14,6 @@ onMounted(async () => {
     await getUsers();
 });
 
-
 async function getUsers() {
     await UserServices.getUsers()
         .then((data) => {
@@ -29,12 +27,10 @@ async function getUsers() {
 const userUnderEdit = ref(null);
 const showEditDialog = ref(false);
 
-
 function editUser(user) {
-    userUnderEdit.value = user;
+    userUnderEdit.value = { ...user }; // Ensure userUnderEdit is a new object to avoid two-way binding issues
     showEditDialog.value = true;
 }
-
 
 function updateUser() {
     UserServices.updateUser(userUnderEdit.value)
@@ -52,7 +48,6 @@ function updateUser() {
             console.log(error);
         });
 }
-
 
 function deleteUser(user) {
     UserServices.deleteUser(user.id)
@@ -113,7 +108,6 @@ function closeSnackBar() {
                 </v-card-text>
             </v-card>
 
-
             <v-dialog v-model="showEditDialog" max-width="500px">
                 <v-card>
                     <v-card-title>
@@ -124,6 +118,13 @@ function closeSnackBar() {
                             <v-text-field v-model="userUnderEdit.firstName" label="First Name"></v-text-field>
                             <v-text-field v-model="userUnderEdit.lastName" label="Last Name"></v-text-field>
                             <v-text-field v-model="userUnderEdit.email" label="Email"></v-text-field>
+                            <v-select
+                                v-model="userUnderEdit.type"
+                                :items="['admin', 'user']"
+                                label="Role"
+                                item-value="role"
+                                item-text="role"
+                            ></v-select>
                         </v-form>
                     </v-card-text>
                     <v-card-actions>

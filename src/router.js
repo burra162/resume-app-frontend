@@ -64,7 +64,12 @@ const router = createRouter({
       path: "/editresume/:resumeId/:templateId",
       name: "editresume",
       component: () => import("./views/editAiResumeTemplate.vue")
-    }
+    },
+    {
+      path: "/adminairesumes/",
+      name: "adminairesumes",
+      component: () => import("./views/AdminAiResumes.vue")
+    },
   
     
   ],

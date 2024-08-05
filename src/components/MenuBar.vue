@@ -58,7 +58,9 @@ function showHome() {
         {{ title }}
       </v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-btn v-if="isAdmin" class="mx-2" :to="{ name: 'adminairesumes' }"> All Resumes </v-btn>
       <v-btn v-if="isAdmin" class="mx-2" :to="{ name: 'manage-users' }"> Manage Users </v-btn>
+
 
       <v-menu v-if="user !== null" min-width="200px" rounded>
         <template v-slot:activator="{ props }">
