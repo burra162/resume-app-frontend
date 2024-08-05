@@ -4,6 +4,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import ResumeServices from "../services/ResumeService.js";  
 import JobServices from "../services/JobsServices.js";   
+import FavoriteServices from "../services/favoriteService.js";   
 
 const router = useRouter();
 
@@ -12,9 +13,13 @@ const snackbar = ref({
   color: "",
   text: "", 
 });
+// Reactive reference to keep track of favorite status
+ 
+
 
 const Jobs = ref([]);
 const Resumes = ref([]);
+const FavResumes = ref([]);
 
 const Resume = ref({
   companyName: "",
@@ -35,7 +40,10 @@ const openEditDialog = async (Resume) => {
 };
 
 const user = ref({});
-
+// Toggle favorite status
+const toggleFavorite = () => {
+  isFavorite.value = !isFavorite.value;
+};
 onMounted(async () => {
   if (localStorage.getItem("user") !== null) {
     user.value = JSON.parse(localStorage.getItem("user"));
@@ -43,6 +51,7 @@ onMounted(async () => {
     router.push({ name: "login" });
   }
   getResumes();
+  getFavourites();
 });
 
 function getResumes() {
@@ -75,6 +84,7 @@ function editResume(Resume) {
    console.log(" Template Id " +Resume.templateId); 
   router.push({ name: 'editresume', params: { resumeId: Resume.id,templateId:Resume.templateId } });
 }
+
  
 function onDeleteResume(Resume) {
   if (!confirm("Are you sure you want to delete this Resume?")) {
@@ -140,6 +150,52 @@ function formatDate(date) {
 function getJobById(jobId) {
   return Jobs.value.find(job => job.id === jobId) || {};
 }
+function getFavourites()
+{
+  FavoriteServices.getfavoritesByUserId(user.value.id)
+    .then((response) => {
+      FavResumes.value = response.data;
+      console.log({favs: FavResumes.value})
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+}
+function addFavorite(resume)
+{
+  const favData = {resumeId:resume.id,userId:user.value.id}
+  FavoriteServices.createfavorite(favData)
+    .then((response) => {
+      getFavourites();
+      console.log({favs: FavResumes.value});
+      snackbar.value.color = "green";
+      snackbar.value.text = "Resume added to favorite list successfully";
+      snackbar.value.value = true;
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+}
+// Function to check if a resume is a favorite
+const isFavorite = (resumeId) => {
+  // Find resume in favorite list
+  console.log("Favs"+FavResumes.value)
+  return FavResumes.value.some(resume => resume.resumeId === resumeId);
+};
+function deleteFavorite(resume)
+{
+   FavoriteServices.deletefavorite(resume.id)
+    .then((response) => {
+      getFavourites();
+      console.log({favs: FavResumes.value});
+      snackbar.value.color = "green";
+      snackbar.value.text = "Resume removed from favorite list successfully";
+      snackbar.value.value = true;
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+}
 </script>
 
 <template>
@@ -168,11 +224,24 @@ function getJobById(jobId) {
                   
                 </v-col>
                 <v-col cols="2">
-                <v-btn icon class="mx-2" @click="editResume(Resume)">
+
+                      <v-btn
+                      
+                     
+                          size="small"  
+                          @click="isFavorite(Resume.id) ? deleteFavorite(Resume) : addFavorite(Resume)"
+                      >
+                      <v-icon size="18"> 
+                         {{ isFavorite(Resume.id) ? 'mdi-heart favorite-icon' : 'mdi-heart-outline' }}
+                       
+                      </v-icon>
+                      </v-btn>
+
+                <v-btn size="small"   icon class="mx-2" @click="editResume(Resume)">
                   <v-icon>mdi-pencil</v-icon>
                 </v-btn>
   
-                <v-btn icon @click="onDeleteResume(Resume)">
+                <v-btn size="small"   icon @click="onDeleteResume(Resume)">
                   <v-icon>mdi-delete</v-icon>
                 </v-btn>
               </v-col>
@@ -235,5 +304,12 @@ export default {
 .Resume-description {
   font-size: 14px;
   color: #424242;
+}
+ 
+.favorite-icon {
+  color: brown;
+}
+.default-icon {
+  color: inherit; /* or use a different color if needed */
 }
 </style>
