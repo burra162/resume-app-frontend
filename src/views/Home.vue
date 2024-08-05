@@ -690,7 +690,7 @@ function goToResume(resumeTemplateId) {
                                 <v-card-actions>
                                     <h3>Skills</h3>
                                     <v-spacer></v-spacer>
-                                    <v-btn variant="flat" color="primary" @click="openAddSkill()">Add
+                                    <v-btn  variant="flat" color="primary" @click="openAddSkill()">Add
                                         Skill</v-btn>
                                 </v-card-actions>
 
@@ -701,10 +701,10 @@ function goToResume(resumeTemplateId) {
                                         <tbody>
                                             <tr @click="editSkill(skill)" v-for="skill in skills" :key="skill.id">
                                                 <td>{{ skill.skill }}</td>
-                                                <td>    <v-btn size="small" icon class="mx-2" @click="editSkill(skill)">
+                                                <td>    <v-btn size="small"  icon class="mx-2" @click="editSkill(skill)">
                                                             <v-icon>mdi-pencil</v-icon>
                                                         </v-btn>
-                                                        <v-btn  size="small" icon @click="deleteSkill(skill)">
+                                                        <v-btn size="small" icon @click="deleteSkill(skill)">
                                                             <v-icon>mdi-delete</v-icon>
                                                         </v-btn>
                                                 </td>

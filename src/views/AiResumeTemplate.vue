@@ -10,9 +10,9 @@ import ProfessionalSummary from "../components/ProfessionalSummary.vue";
 import Projects from "../components/Projects.vue";  
 import Skills from "../components/Skills.vue";  
 import LeaderShips from "../components/Leaderships.vue";
-import Awards from "../components/Awards.vue";  
-
+import Awards from "../components/Awards.vue";   
 import ResumeServices from "../services/ResumeService.js";
+import FavoriteServices from "../services/favoriteService.js"; 
  
 // Reactive references for various details
 const userDetails = ref({});
@@ -26,6 +26,7 @@ const awardsDetails = ref({});
 const user = ref({});
 const selectedResumeId = ref(''); // Use an empty string for consistency
 const selectedTemplateId = ref(''); 
+const FavResumes = ref([]);
 
 // Vue Router and Route
 const route = useRoute();
@@ -91,6 +92,7 @@ onMounted(async () => {
   } catch (error) {
     console.error('Resume Data:--', error);
   }
+  getFavourites();
 });
 
 // Function to extract and parse JSON
@@ -148,6 +150,57 @@ function editResume() {
     console.log(" Template Id " +selectedTemplateId); 
    router.push({ name: 'editresume', params: { resumeId: selectedResumeId.value,templateId:selectedTemplateId.value} });
  }
+
+ function getFavourites()
+{
+  FavoriteServices.getfavoritesByUserId(user.value.id)
+    .then((response) => {
+      FavResumes.value = response.data;
+      console.log({favs: FavResumes.value})
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+}
+function addFavorite(resumeId)
+{
+  const favData = {resumeId:resumeId,userId:user.value.id}
+  FavoriteServices.createfavorite(favData)
+    .then((response) => {
+      getFavourites();
+      console.log({favs: FavResumes.value});
+      snackbar.value.color = "green";
+      snackbar.value.text = "Resume added to favorite list successfully";
+      snackbar.value.value = true;
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+}
+// Function to check if a resume is a favorite
+const isFavorite = (resumeId) => {
+  // Find resume in favorite list
+  console.log("Favs---");
+  console.log(FavResumes.value);
+  console.log("Resume id is "+resumeId);
+  const found = FavResumes.value.some(resume => Number(resume.resumeId) === Number(resumeId));
+  console.log("is Faviroute "+found)
+  return found;
+}
+function deleteFavorite(ResumeId)
+{
+   FavoriteServices.deletefavorite(ResumeId)
+    .then((response) => {
+      getFavourites();
+      console.log({favs: FavResumes.value});
+      snackbar.value.color = "green";
+      snackbar.value.text = "Resume removed from favorite list successfully";
+      snackbar.value.value = true;
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+}
 </script>
 
 <template>
@@ -161,13 +214,20 @@ function editResume() {
                         </v-tabs>
     <h1>AI Resume Template {{ selectedTemplateId }} </h1>
     <v-row justify="end">
+      <v-btn
+                class="mr-2"
+                      @click="isFavorite(selectedResumeId) ? deleteFavorite(selectedResumeId) : addFavorite(selectedResumeId)"
+                  >
+                  <v-icon size="18"> 
+                     {{ isFavorite(selectedResumeId) ? 'mdi-heart favorite-icon' : 'mdi-heart-outline' }}
+                   
+                  </v-icon>
+                  </v-btn>
       <v-btn @click="editResume" justify="end" class='mr-2'><v-icon left>mdi-pencil</v-icon> Edit Resume</v-btn>
-       <v-btn @click="downloadPDF" justify="end"><v-icon left>mdi-download</v-icon> Download</v-btn>
+       <v-btn @click="downloadPDF" justify="end" class='mr-2'><v-icon left>mdi-download</v-icon> Download</v-btn>
     
      </v-row>
-    <v-row justify="end">
-      <!-- Download button here -->
-    </v-row>
+   
 
     <div class="mt-5"></div>
     <div id="resume"> 
@@ -260,5 +320,11 @@ function editResume() {
 /* Use deep selector to ensure specificity */
 ::v-deep .v-card--variant-elevated {
   box-shadow: none !important;
+}
+.favorite-icon {
+  color: brown;
+}
+.default-icon {
+  color: inherit; /* or use a different color if needed */
 }
 </style>
