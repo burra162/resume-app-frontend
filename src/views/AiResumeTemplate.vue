@@ -213,7 +213,7 @@ function deleteFavorite(ResumeId)
                             </v-tab>
                         </v-tabs>
     <h1>AI Resume Template {{ selectedTemplateId }} </h1>
-    <v-row justify="end">
+    <v-row justify="end" v-if="user.type ==='user'">
       <v-btn
                 class="mr-2"
                       @click="isFavorite(selectedResumeId) ? deleteFavorite(selectedResumeId) : addFavorite(selectedResumeId)"

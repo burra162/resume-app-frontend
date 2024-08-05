@@ -126,5 +126,9 @@ export default {
     updateAiResumes(id, skill) {
         return apiClient.put(`user-details/skill/${id}`, skill);
     },
+    getAllResumes() {
+        return apiClient.get(`/resumes-allusers`);
+    },
+     
 
 }

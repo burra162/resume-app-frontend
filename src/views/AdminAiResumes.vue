@@ -72,7 +72,7 @@ function getUserResumes() {
       console.log(e);
     });
 
-      JobServices.getJobsByUserId(user.value.id)
+      JobServices.getAlljobs()
     .then((response) => {
       Jobs.value = response.data;
     })
@@ -89,7 +89,7 @@ function getAdminResumes() {
       console.log(e);
     });
 
-      JobServices.getJobsByUserId(user.value.id)
+      JobServices.getAlljobs(user.value.id)
     .then((response) => {
       Jobs.value = response.data;
     })
@@ -249,28 +249,7 @@ function deleteFavorite(resume)
                   <div class="Resume-skills">Template Id {{ Resume.templateId }}</div>
                   
                 </v-col>
-                <v-col cols="2">
-
-                      <v-btn
-                      
-                     
-                          size="small"  
-                          @click="isFavorite(Resume.id) ? deleteFavorite(Resume) : addFavorite(Resume)"
-                      >
-                      <v-icon size="18"> 
-                         {{ isFavorite(Resume.id) ? 'mdi-heart favorite-icon' : 'mdi-heart-outline' }}
-                       
-                      </v-icon>
-                      </v-btn>
-
-                <v-btn size="small"   icon class="mx-2" @click="editResume(Resume)">
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-  
-                <v-btn size="small"   icon @click="onDeleteResume(Resume)">
-                  <v-icon>mdi-delete</v-icon>
-                </v-btn>
-              </v-col>
+                
               </v-row>
               <v-row>
                 <v-col>
