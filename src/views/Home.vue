@@ -617,6 +617,7 @@ function goToResume(resumeTemplateId) {
                                                 <th class="text-left">Start Date</th>
                                                 <th class="text-left">End Date</th>
                                                 <th class="text-left">GPA</th>
+                                                <th class="text-left"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -627,6 +628,13 @@ function goToResume(resumeTemplateId) {
                                                 <td>{{ formatEducationDate(education.startDate) }}</td>
                                                 <td>{{ formatEducationDate(education.endDate) }}</td>
                                                 <td>{{ education.gpa }}</td>
+                                                <td>    <v-btn icon class="mx-2" @click="editEducation(education)">
+                                                            <v-icon>mdi-pencil</v-icon>
+                                                        </v-btn>
+                                                        <v-btn icon @click="deleteEducation(education)">
+                                                            <v-icon>mdi-delete</v-icon>
+                                                        </v-btn>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </template>
@@ -653,6 +661,7 @@ function goToResume(resumeTemplateId) {
                                                 <th class="text-left">Job Title</th>
                                                 <th class="text-left">Start Date</th>
                                                 <th class="text-left">End Date</th>
+                                                <th class="text-left"> </th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -662,6 +671,13 @@ function goToResume(resumeTemplateId) {
                                                 <td>{{ experience.jobTitle }}</td>
                                                 <td>{{ formatExperienceDate(experience.startDate) }}</td>
                                                 <td>{{ experience.endDate?formatExperienceDate(experience.endDate):'Present'  }}</td>
+                                                <td>    <v-btn icon class="mx-2" @click="showExpeience(experience)">
+                                                            <v-icon>mdi-pencil</v-icon>
+                                                        </v-btn>
+                                                        <v-btn icon @click="deleteExperience(experience)">
+                                                            <v-icon>mdi-delete</v-icon>
+                                                        </v-btn>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </template>
@@ -685,6 +701,13 @@ function goToResume(resumeTemplateId) {
                                         <tbody>
                                             <tr @click="editSkill(skill)" v-for="skill in skills" :key="skill.id">
                                                 <td>{{ skill.skill }}</td>
+                                                <td>    <v-btn size="small" icon class="mx-2" @click="editSkill(skill)">
+                                                            <v-icon>mdi-pencil</v-icon>
+                                                        </v-btn>
+                                                        <v-btn  size="small" icon @click="deleteSkill(skill)">
+                                                            <v-icon>mdi-delete</v-icon>
+                                                        </v-btn>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </template>
