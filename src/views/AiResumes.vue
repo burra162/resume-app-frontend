@@ -3,7 +3,7 @@ import { onMounted } from "vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import ResumeServices from "../services/ResumeService.js";  
-import JobServices from "../services/JobsServices.js";  
+import JobServices from "../services/JobsServices.js";   
 
 const router = useRouter();
 
@@ -67,6 +67,13 @@ function viewResume(Resume) {
    console.log(" Resume Id " +Resume.id); 
    console.log(" Template Id " +Resume.templateId); 
   router.push({ name: 'airesumetemplate', params: { resumeId: Resume.id,templateId:Resume.templateId } });
+}
+//
+function editResume(Resume) {
+    
+   console.log(" Edit Resume with Id " +Resume.id); 
+   console.log(" Template Id " +Resume.templateId); 
+  router.push({ name: 'editresume', params: { resumeId: Resume.id,templateId:Resume.templateId } });
 }
  
 function onDeleteResume(Resume) {
@@ -161,7 +168,7 @@ function getJobById(jobId) {
                   
                 </v-col>
                 <v-col cols="2">
-                <v-btn icon class="mx-2" @click="openEditDialog(exp)">
+                <v-btn icon class="mx-2" @click="editResume(Resume)">
                   <v-icon>mdi-pencil</v-icon>
                 </v-btn>
   

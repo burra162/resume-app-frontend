@@ -142,6 +142,12 @@ const downloadPDF = async () => {
 function changeResumeTemplateTab(index) {
   selectedTemplateId.value = index+1;
 }
+function editResume() {
+    
+    console.log(" Edit Resume with Id " +selectedResumeId); 
+    console.log(" Template Id " +selectedTemplateId); 
+   router.push({ name: 'editresume', params: { resumeId: selectedResumeId.value,templateId:selectedTemplateId.value} });
+ }
 </script>
 
 <template>
@@ -155,7 +161,7 @@ function changeResumeTemplateTab(index) {
                         </v-tabs>
     <h1>AI Resume Template {{ selectedTemplateId }} </h1>
     <v-row justify="end">
-       
+      <v-btn @click="editResume" justify="end" class='mr-2'><v-icon left>mdi-pencil</v-icon> Edit Resume</v-btn>
        <v-btn @click="downloadPDF" justify="end"><v-icon left>mdi-download</v-icon> Download</v-btn>
     
      </v-row>

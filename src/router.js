@@ -60,6 +60,11 @@ const router = createRouter({
       name: "airesumetemplate",
       component: () => import("./views/AiResumeTemplate.vue")
     },
+    {
+      path: "/editresume/:resumeId/:templateId",
+      name: "editresume",
+      component: () => import("./views/editAiResumeTemplate.vue")
+    }
   
     
   ],

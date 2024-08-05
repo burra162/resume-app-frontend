@@ -14,6 +14,7 @@ const snackbar = ref({
 });
 
 const Jobs = ref([]);
+const Airesumes = ref([]);
 
 const Job = ref({
   companyName: "",
@@ -42,12 +43,16 @@ onMounted(async () => {
     router.push({ name: "login" });
   }
   getJobs();
+     const resumeList = await ResumeServices.getResumesByUserId(user.value.id);
+     Airesumes.value = resumeList.data;
+    console.log("Resumes List");
+    console.log(Airesumes.value);
 });
 
 function getJobs() {
   JobServices.getJobsByUserId(user.value.id)
-    .then((response) => {
-      Jobs.value = response.data;
+    .then((response) => { 
+        Jobs.value =  response.data.slice().sort((a, b) => b.id - a.id);
     })
     .catch((e) => {
       console.log(e);
@@ -55,21 +60,7 @@ function getJobs() {
 }
 function generateResume(jobId) {
    console.log("User "+user.value.id);
-   console.log(" Job Id " +jobId);
-  //  const resumeData = {
-  //         userId: user.value.id,
-  //         jobId: jobId
-  //       };
-  //     ResumeServices.generateResume(resumeData).then((response) => {
-      
-  //     console.log("Response :" + response)
-  //   })
-  //   .catch((e) => {
-  //     snackbar.value.color = "red";
-  //     snackbar.value.text = "Error creating Resume";
-  //     snackbar.value.value = true;
-  //     console.log(e);
-  //   });
+   console.log(" Job Id " +jobId); 
   router.push({ name: 'newresume', params: { jobId: jobId } });
 }
 
@@ -178,6 +169,31 @@ function closeSnackBar() {
 function openAddDialog() {
   addDialog.value = true;
 }
+// Method to check if a job exists in the airesumes array
+function isJobInAiresumes(jobId) {
+  return !Airesumes.value.some((resume) => resume.jobsId === jobId);
+}
+// Method to check if a job exists in the airesumes array
+function getResumeDetails(jobId) {
+  // Find the first matching resume object based on jobsId
+  const matchedResume = Airesumes.value.find((resume) => resume.jobsId === jobId);
+
+  // Log the matched resume object
+  if (matchedResume) {
+    console.log('Matched Resume:', matchedResume);
+  } else {
+    console.log(`No resume found for job ID: ${jobId}`);
+  }
+
+  // Return the matched resume object (or undefined if not found)
+  return matchedResume;
+}
+function viewResume(Resume) {
+   console.log("User "+user.value.id);
+   console.log(" Resume Id " +Resume.id); 
+   console.log(" Template Id " +Resume.templateId); 
+  router.push({ name: 'airesumetemplate', params: { resumeId: Resume.id,templateId:Resume.templateId } });
+}
 </script>
 
 <template>
@@ -216,7 +232,7 @@ function openAddDialog() {
                   </v-btn>
                 </v-col>
               </v-row>
-              <v-row>
+              <v-row   v-if="isJobInAiresumes(job.id)" >
                 <v-col>
                   <v-btn
                         @click="generateResume(job.id)"
@@ -225,6 +241,18 @@ function openAddDialog() {
                       >
                         <v-icon left>mdi-file-document-outline</v-icon>
                         Generate Resume 
+                 </v-btn>
+                  </v-col>
+              </v-row>
+              <v-row   v-if="!isJobInAiresumes(job.id)" >
+                <v-col>
+                 
+                  <v-btn
+                        @click="viewResume(getResumeDetails(job.id))"
+                        color="primary" 
+                      >
+                        <v-icon left>mdi-file-document-outline</v-icon>
+                        View Resume  
                  </v-btn>
                   </v-col>
               </v-row>
