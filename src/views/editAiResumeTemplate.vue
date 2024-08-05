@@ -249,6 +249,7 @@ async function publish(chat)
 <template>
   <v-container>
     <h1>Edit Resume</h1>
+    <h2>Chat History</h2>
     <v-row>
       <!-- First Column: Chat and Form -->
       <v-col cols="12" md="6">
@@ -290,6 +291,7 @@ async function publish(chat)
       <v-col cols="12" md="6">
         <div id="text-section">
           <h2>Resume Preview</h2>
+          
           <div id="resume">
             <!-- Pass dynamic templateId to each component -->
             <UserInfo 
