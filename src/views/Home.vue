@@ -184,6 +184,23 @@ async function getExperiences() {
 
 
 async function saveExperience() {
+
+    if(
+        experience.value.employer === "" || 
+        experience.value.jobTitle === "" || 
+        experience.value.address === "" || 
+        experience.value.startDate === "" || 
+        experience.value.endDate === "" || 
+        experience.value.description === "" || 
+        experience.value.description === ""   
+         
+    )
+    {
+        snackbar.value.value = true;
+            snackbar.value.color = "red";
+            snackbar.value.text = "Please fill all required fields!";
+            return ;
+    }
     await ResumeServices.saveExperience(experience.value)
         .then(() => {
             snackbar.value.value = true;
@@ -200,6 +217,23 @@ async function saveExperience() {
 }
 
 async function updateExperience() {
+
+    if(
+        experience.value.employer === "" || 
+        experience.value.jobTitle === "" || 
+        experience.value.address === "" || 
+        experience.value.startDate === "" || 
+        experience.value.endDate === "" || 
+        experience.value.description === "" || 
+        experience.value.description === ""   
+         
+    )
+    {
+        snackbar.value.value = true;
+            snackbar.value.color = "red";
+            snackbar.value.text = "Please fill all required fields!";
+            return ;
+    }
     await ResumeServices.updateExperience(experience.value.id, experience.value)
         .then(() => {
             snackbar.value.value = true;
@@ -276,6 +310,13 @@ async function getSkills() {
 
 
 async function saveSkill() {
+    if( skill.value.skill === ""  )
+    {
+        snackbar.value.value = true;
+            snackbar.value.color = "red";
+            snackbar.value.text = "Please fill all required fields!";
+            return ;
+    }
     await ResumeServices.saveSkill(skill.value)
         .then(() => {
             snackbar.value.value = true;
@@ -292,6 +333,14 @@ async function saveSkill() {
 }
 
 async function updateSkill() {
+    if( skill.value.skill === ""  )
+    {
+        snackbar.value.value = true;
+            snackbar.value.color = "red";
+            snackbar.value.text = "Please fill all required fields!";
+            return ;
+    }
+    
     await ResumeServices.updateSkill(skill.value.id, skill.value)
         .then(() => {
             snackbar.value.value = true;
@@ -384,6 +433,22 @@ async function getEducations() {
 }
 
 async function saveEducation() {
+    if(
+        education.value.school === "" || 
+        education.value.address === "" || 
+        education.value.degree === "" || 
+        education.value.startDate === "" || 
+        education.value.endDate === "" || 
+        education.value.gpa === "" || 
+        education.value.coursework === "" 
+    )
+    {
+        snackbar.value.value = true;
+            snackbar.value.color = "red";
+            snackbar.value.text = "Please fill all required fields!";
+            return ;
+    }
+
     await ResumeServices.saveEducation(education.value)
         .then(() => {
             snackbar.value.value = true;
@@ -400,6 +465,21 @@ async function saveEducation() {
 }
 
 async function updateEducation() {
+    if(
+        education.value.school === "" || 
+        education.value.address === "" || 
+        education.value.degree === "" || 
+        education.value.startDate === "" || 
+        education.value.endDate === "" || 
+        education.value.gpa === "" || 
+        education.value.coursework === "" 
+    )
+    {
+        snackbar.value.value = true;
+            snackbar.value.color = "red";
+            snackbar.value.text = "Please fill all required fields!";
+            return ;
+    }
     await ResumeServices.updateEducation(education.value.id, education.value)
         .then(() => {
             snackbar.value.value = true;
