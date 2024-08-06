@@ -11,6 +11,7 @@ import Projects from "../components/Projects.vue";
 import Skills from "../components/Skills.vue";  
 import LeaderShips from "../components/Leaderships.vue";
 import Awards from "../components/Awards.vue";   
+import Reviews from "../components/Reviews.vue";   
 import ResumeServices from "../services/ResumeService.js";
 import FavoriteServices from "../services/favoriteService.js"; 
  
@@ -55,7 +56,7 @@ onMounted(async () => {
 
   // Set resumeId and templateId from route parameters
   const resumeId = route.params.resumeId;
-  selectedResumeId.value = resumeId; // Fixed typo: selctedResumeId to selectedResumeId
+  selectedResumeId.value = Number(resumeId); // Fixed typo: selctedResumeId to selectedResumeId
   console.log("Resume id: " + resumeId);
 
   const templateId = Number(route.params.templateId);
@@ -281,6 +282,8 @@ function deleteFavorite(ResumeId)
         :templateId="selectedTemplateId">
       </Skills>
 
+     
+     
       <!-- Snackbar for displaying messages -->
       <v-snackbar v-model="snackbar.value" rounded="pill">
         {{ snackbar.text }}
@@ -291,6 +294,9 @@ function deleteFavorite(ResumeId)
         </template>
       </v-snackbar>
     </div>
+     <div> 
+      <Reviews :resume-id="selectedResumeId"   :resumeId="selectedResumeId"> </Reviews>
+    </div>  
   </v-container>
 </template>
 
